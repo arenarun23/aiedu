@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIEDU - 놀면서 배우는 AI 교실</title>
+<meta name="description" content="유아와 초등 저학년을 위한 놀이 서비스 모음, AIEDU">
+<meta name="theme-color" content="#fff3d6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#fff3d6; --bg2:#ffe3ef; --ink:#4a3426; --ink-soft:#8a6f5c;
+    --card:#ffffff;
+    --pink:#ff8fb4;  --pink-bg:#ffe1ec;
+    --sky:#5fbcff;   --sky-bg:#dff1ff;
+    --orange:#ffa94d;--orange-bg:#ffedd3;
+    --mint:#4fd1a1;  --mint-bg:#d9f7ea;
+    --lemon:#f3c623; --lemon-bg:#fff6c9;
+    --lilac:#b39bff; --lilac-bg:#ece6ff;
+    --peach:#ff9a82; --peach-bg:#ffe5de;
+    --font:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; background:var(--bg2)}
+  body{
+    margin:0; min-height:100vh; color:var(--ink); font-family:var(--font);
+    background:linear-gradient(170deg,var(--bg1) 0%,var(--bg2) 100%) fixed;
+    overflow-x:hidden; position:relative;
+  }
+
+  /* 떠다니는 장식 */
+  .deco{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden}
+  .deco span{position:absolute; font-size:clamp(22px,4vw,40px); opacity:.55; animation:float 7s ease-in-out infinite}
+  .deco span:nth-child(1){left:6%;  top:12%; animation-delay:0s}
+  .deco span:nth-child(2){left:88%; top:9%;  animation-delay:-1.5s}
+  .deco span:nth-child(3){left:14%; top:68%; animation-delay:-3s}
+  .deco span:nth-child(4){left:82%; top:62%; animation-delay:-4.5s}
+  .deco span:nth-child(5){left:48%; top:4%;  animation-delay:-2s}
+  .deco span:nth-child(6){left:92%; top:86%; animation-delay:-5s}
+  .deco span:nth-child(7){left:4%;  top:90%; animation-delay:-1s}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+
+  main{position:relative; z-index:1; max-width:1000px; margin:0 auto; padding:clamp(40px,7vw,64px) 16px 40px}
+
+  /* 머리글 */
+  header{text-align:center; margin-bottom:clamp(24px,5vw,44px)}
+  .logo{display:flex; justify-content:center; gap:clamp(2px,1vw,8px); margin:0; line-height:1;
+        font-size:clamp(56px,16vw,120px); font-weight:400}
+  .logo span{display:inline-block; text-shadow:0 5px 0 rgba(74,52,38,.14); animation:bounce 2.4s ease-in-out infinite}
+  .logo span:nth-child(1){color:var(--pink)}
+  .logo span:nth-child(2){color:var(--orange);animation-delay:.15s}
+  .logo span:nth-child(3){color:var(--lemon); animation-delay:.3s}
+  .logo span:nth-child(4){color:var(--mint);  animation-delay:.45s}
+  .logo span:nth-child(5){color:var(--sky);   animation-delay:.6s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-14px)}}
+  .tagline{display:inline-block; margin:14px 0 0; padding:8px 20px; background:rgba(255,255,255,.8);
+           border-radius:999px; font-size:clamp(16px,3.6vw,22px); color:var(--ink-soft);
+           box-shadow:0 4px 0 rgba(74,52,38,.08)}
+  .lead{margin:18px 0 0; font-size:clamp(18px,4vw,26px)}
+
+  /* 카드 */
+  .grid{display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(16px,3vw,26px); list-style:none; margin:0; padding:0}
+  .grid > li{flex:1 1 210px; max-width:260px}
+  .card{
+    --c:var(--pink); --cbg:var(--pink-bg);
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;
+    height:100%; padding:26px 18px 22px; color:inherit; text-decoration:none;
+    background:var(--card); border:4px solid var(--c); border-radius:32px;
+    box-shadow:0 8px 0 var(--c), 0 18px 30px rgba(74,52,38,.12);
+    transition:transform .18s cubic-bezier(.3,1.6,.5,1), box-shadow .18s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .grid li:nth-child(odd) .card{transform:rotate(-1.5deg)}
+  .grid li:nth-child(even) .card{transform:rotate(1.5deg)}
+  .card:hover,.card:focus-visible{transform:translateY(-8px) rotate(0) scale(1.03); box-shadow:0 14px 0 var(--c), 0 26px 36px rgba(74,52,38,.16); outline:none}
+  .card:focus-visible{outline:4px dashed var(--ink); outline-offset:4px}
+  .card:active{transform:translateY(2px) scale(.98); box-shadow:0 4px 0 var(--c)}
+  .badge{
+    display:grid; place-items:center; width:104px; height:104px; border-radius:50%;
+    background:var(--cbg); border:4px dashed var(--c); font-size:50px; line-height:1; margin-bottom:6px;
+    transition:transform .3s;
+  }
+  .card:hover .badge,.card:focus-visible .badge{animation:wiggle .6s ease-in-out}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg) scale(1.08)}75%{transform:rotate(12deg) scale(1.08)}}
+  .name{font-size:clamp(22px,4.4vw,26px); line-height:1.25}
+  .desc{font-family:"Gowun Dodum",var(--font); font-size:16px; color:var(--ink-soft); line-height:1.45; min-height:2.9em; word-break:keep-all}
+  .go{
+    margin-top:auto; padding:10px 24px; border-radius:999px; background:var(--c); color:#fff;
+    font-size:18px; box-shadow:0 4px 0 rgba(74,52,38,.2); text-shadow:0 1px 0 rgba(0,0,0,.12);
+  }
+  .card.pink{--c:var(--pink);--cbg:var(--pink-bg)}   .card.sky{--c:var(--sky);--cbg:var(--sky-bg)}
+  .card.orange{--c:var(--orange);--cbg:var(--orange-bg)} .card.mint{--c:var(--mint);--cbg:var(--mint-bg)}
+  .card.lemon{--c:var(--lemon);--cbg:var(--lemon-bg)} .card.lilac{--c:var(--lilac);--cbg:var(--lilac-bg)}
+  .card.peach{--c:var(--peach);--cbg:var(--peach-bg)}
+
+  .empty{grid-column:1/-1; text-align:center; font-size:22px; padding:40px 0; list-style:none}
+  footer{position:relative; z-index:1; text-align:center; padding:12px 16px 36px; color:var(--ink-soft); font-size:15px}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important; transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="deco" aria-hidden="true"><span>⭐</span><span>☁️</span><span>🌈</span><span>🎈</span><span>✨</span><span>🍀</span><span>🌷</span></div>
+
+<main>
+  <header>
+    <h1 class="logo" aria-label="AIEDU"><span>A</span><span>I</span><span>E</span><span>D</span><span>U</span></h1>
+    <p class="tagline">놀면서 배우는 AI 교실</p>
+    <p class="lead">오늘은 무엇을 하고 놀까요? 🎒</p>
+  </header>
+
+  <ul class="grid" id="grid" aria-live="polite"></ul>
+</main>
+
+<footer>© AIEDU · 즐겁게 놀고, 쑥쑥 자라요 🌱</footer>
+
+<script>
+(function(){
+  var grid=document.getElementById('grid');
+  var COLORS=['pink','sky','orange','mint','lemon','lilac','peach'];
+  function msg(t){var li=document.createElement('li');li.className='empty';li.textContent=t;grid.appendChild(li);}
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+  fetch('apps.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(apps){
+    if(!apps.length){msg('곧 새로운 놀이가 찾아와요! 🎈');return;}
+    apps.forEach(function(a,i){
+      var color=COLORS.indexOf(a.color)>-1?a.color:COLORS[i%COLORS.length];
+      var li=document.createElement('li');
+      var link=el('a','card '+color);
+      link.href=a.href;
+      link.setAttribute('aria-label',a.name+' 놀러가기');
+      link.appendChild(el('div','badge',a.icon));
+      link.appendChild(el('div','name',a.name));
+      link.appendChild(el('div','desc',a.desc||''));
+      link.appendChild(el('div','go','놀러가기 ▶'));
+      li.appendChild(link);grid.appendChild(li);
+    });
+  }).catch(function(){msg('앗, 놀이 목록을 못 불러왔어요. 새로고침 해 주세요! 🔄');});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# 앱 저장소의 .github/workflows/notify-hub.yml 로 복사해서 사용
+# 필요: 앱 저장소 Settings > Secrets and variables > Actions 에 HUB_DEPLOY_HOOK 등록
+name: Notify hub
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger hub deploy
+        env:
+          HOOK: ${{ secrets.HUB_DEPLOY_HOOK }}
+        run: curl -fsS -X POST "$HOOK"
