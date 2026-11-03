@@ -12,16 +12,18 @@ rmSync('dist', { recursive: true, force: true });
 mkdirSync('dist', { recursive: true });
 cpSync('public', 'dist', { recursive: true });
 
+const shas = {};
 for (const a of apps) {
   if (a.url || !a.repo) { console.log('↗', a.id, a.url ?? ''); continue; }
   const tmp = mkdtempSync(join(tmpdir(), a.id + '-'));
   const url = `https://${token ? token + '@' : ''}github.com/${a.repo}.git`;
   const args = ['clone', '--depth', '1', '-q', ...(a.ref ? ['-b', a.ref] : []), url, tmp];
   execFileSync('git', args, { stdio: 'inherit', env: { ...process.env, GIT_LFS_SKIP_SMUDGE: '1' } });
+  shas[a.id] = execFileSync('git', ['-C', tmp, 'rev-parse', 'HEAD']).toString().trim(); // 배포된 버전 기록
   rmSync(join(tmp, '.git'), { recursive: true, force: true });
   for (const x of a.exclude ?? []) rmSync(join(tmp, x), { recursive: true, force: true });
   cpSync(tmp, join('dist', a.id), { recursive: true });
   console.log('✔', a.id);
 }
 writeFileSync('dist/apps.json', JSON.stringify(
-  apps.map(a => ({ id: a.id, name: a.name, desc: a.desc, icon: a.icon, color: a.color, href: a.url || `${a.id}/` })), null, 2));
+  apps.map(a => ({ id: a.id, name: a.name, desc: a.desc, icon: a.icon, color: a.color, href: a.url || `${a.id}/`, sha: shas[a.id] })), null, 2));

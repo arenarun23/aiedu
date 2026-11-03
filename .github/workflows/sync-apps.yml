@@ -1,0 +1,39 @@
+# 5분마다 각 앱 저장소의 최신 커밋과 배포된 허브를 비교하고, 다르면 허브를 다시 배포한다.
+# 필요: 이 저장소 Settings > Secrets and variables > Actions 에 HUB_DEPLOY_HOOK (Vercel Deploy Hook 주소)
+# 선택: Variables 에 SITE_URL (허브 주소, 기본값 https://aiedu-pearl.vercel.app)
+name: Sync apps
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+concurrency:
+  group: sync-apps
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check for app updates
+        id: check
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          set +e
+          node scripts/check-updates.mjs
+          code=$?
+          if [ "$code" -eq 10 ]; then echo "stale=true" >> "$GITHUB_OUTPUT"
+          elif [ "$code" -ne 0 ]; then exit "$code"; fi
+      - name: Trigger hub deploy
+        if: steps.check.outputs.stale == 'true'
+        env:
+          HOOK: ${{ secrets.HUB_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::HUB_DEPLOY_HOOK secret 이 없어 재배포를 건너뜁니다."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK"
