@@ -1,6 +1,7 @@
 # 앱 저장소의 .github/workflows/notify-hub.yml 로 복사해서 사용
 # 필요: 앱 저장소 Settings > Secrets and variables > Actions 에 HUB_DEPLOY_HOOK 등록
-name: Notify hub
+# main 에 push 되면 AIEDU 허브(Vercel)를 즉시 다시 배포한다.
+name: Notify AIEDU hub
 on:
   push:
     branches: [main]
@@ -12,4 +13,9 @@ jobs:
       - name: Trigger hub deploy
         env:
           HOOK: ${{ secrets.HUB_DEPLOY_HOOK }}
-        run: curl -fsS -X POST "$HOOK"
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::HUB_DEPLOY_HOOK secret 이 없어 허브 갱신을 건너뜁니다."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK"
