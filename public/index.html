@@ -26,7 +26,8 @@
     --lemon:#f3c623; --lemon-bg:#fff6c9;
     --lilac:#b39bff; --lilac-bg:#ece6ff;
     --peach:#ff9a82; --peach-bg:#ffe5de;
-    --u:min(1vw,1.6vh);
+    --cols:4; --k:1;
+    --u:min(1vw,calc(1.6vh*var(--k)));
     --font:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   }
   *{box-sizing:border-box}
@@ -72,7 +73,7 @@
 
   /* 카드 */
   .grid{display:flex; flex-wrap:wrap; justify-content:center; gap:calc(var(--u)*2); list-style:none; margin:0; padding:0}
-  .grid > li{flex:0 1 calc((100% - var(--u)*6)/4); min-width:150px; max-width:270px}
+  .grid > li{flex:0 1 calc((100% - var(--u)*2*(var(--cols) - 1))/var(--cols)); min-width:0; max-width:270px}
   .card{
     --c:var(--pink); --cbg:var(--pink-bg);
     display:flex; flex-direction:column; align-items:center; text-align:center; gap:calc(var(--u)*.5);
@@ -111,12 +112,20 @@
 
   /* 세로 화면·좁은 화면: 2열로 */
   @media (orientation:portrait), (max-width:720px){
-    .grid > li{flex:0 1 calc((100% - var(--u)*2)/2); min-width:0; max-width:none}
+    .grid > li{max-width:none}
   }
   /* 가로로 눕힌 낮은 화면: 안내 문구를 접어 공간 확보 */
   @media (max-height:520px) and (orientation:landscape){
     .lead{display:none} header{margin-bottom:calc(var(--u)*1.4)}
   }
+  /* 아주 낮은 화면: 카드 설명을 접고 아이콘을 줄여 여러 줄도 한 화면에 */
+  @media (max-height:460px){
+    .desc{display:none} .badge{--b:clamp(40px,calc(var(--u)*8),90px)}
+    .logo{font-size:clamp(32px,calc(var(--u)*9.5),120px)} footer{padding-bottom:6px} main{padding-top:calc(var(--u)*1.4)}
+    .card{padding-top:calc(var(--u)*1.2); padding-bottom:calc(var(--u)*1.2)}
+  }
+  /* 작은 폰(세로): 안내 문구를 접어 공간 확보 */
+  @media (max-height:700px) and (orientation:portrait){ .lead{display:none} .logo{font-size:clamp(38px,calc(var(--u)*9.5),120px)} header{margin-bottom:calc(var(--u)*1.6)} }
 
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important; transition:none!important}
@@ -141,11 +150,22 @@
 <script>
 (function(){
   var grid=document.getElementById('grid');
+  // 카드 개수와 화면 방향에 맞춰 열 수·크기 배율을 정한다(예: 5개 → 3+2, 가로 4열/세로 2열)
+  var narrowMQ=window.matchMedia('(orientation:portrait), (max-width:720px)');
+  var count=0;
+  function layout(){
+    if(!count)return;
+    var maxCols=narrowMQ.matches?2:4, rows=Math.ceil(count/maxCols), cols=Math.ceil(count/rows);
+    var k=[1,1,.68,.5,.42][Math.min(rows,4)];
+    var st=document.documentElement.style; st.setProperty('--cols',cols); st.setProperty('--k',k);
+  }
+  if(narrowMQ.addEventListener)narrowMQ.addEventListener('change',layout);else narrowMQ.addListener(layout);
   var COLORS=['pink','sky','orange','mint','lemon','lilac','peach'];
   function msg(t){var li=document.createElement('li');li.className='empty';li.textContent=t;grid.appendChild(li);}
   function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
   fetch('apps.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(apps){
     if(!apps.length){msg('곧 새로운 놀이가 찾아와요! 🎈');return;}
+    count=apps.length; layout();
     apps.forEach(function(a,i){
       var color=COLORS.indexOf(a.color)>-1?a.color:COLORS[i%COLORS.length];
       var li=document.createElement('li');
