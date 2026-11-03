@@ -132,7 +132,8 @@
       var li=document.createElement('li');
       var link=el('a','card '+color);
       link.href=a.href;
-      link.setAttribute('aria-label',a.name+' 놀러가기');
+      link.target='_blank'; link.rel='noopener';
+      link.setAttribute('aria-label',a.name+' 놀러가기 (새 창)');
       link.appendChild(el('div','badge',a.icon));
       link.appendChild(el('div','name',a.name));
       link.appendChild(el('div','desc',a.desc||''));
