@@ -26,12 +26,13 @@
     --lemon:#f3c623; --lemon-bg:#fff6c9;
     --lilac:#b39bff; --lilac-bg:#ece6ff;
     --peach:#ff9a82; --peach-bg:#ffe5de;
+    --u:min(1vw,1.6vh);
     --font:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%; background:var(--bg2)}
   body{
-    margin:0; min-height:100vh; color:var(--ink); font-family:var(--font);
+    margin:0; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; color:var(--ink); font-family:var(--font);
     background:linear-gradient(170deg,var(--bg1) 0%,var(--bg2) 100%) fixed;
     overflow-x:hidden; position:relative;
   }
@@ -48,61 +49,74 @@
   .deco span:nth-child(7){left:4%;  top:90%; animation-delay:-1s}
   @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(6deg)}}
 
-  main{position:relative; z-index:1; max-width:1000px; margin:0 auto; padding:clamp(40px,7vw,64px) 16px 40px}
+  /* 화면 크기에 맞춰 자동 조절: --u 는 가로·세로 중 작은 쪽에 비례하는 기준 단위 */
+  main{position:relative; z-index:1; width:100%; max-width:1100px; margin:0 auto; flex:1;
+       display:flex; flex-direction:column; justify-content:center;
+       padding:calc(var(--u)*2.4) 16px calc(var(--u)*1.2)}
 
   /* 머리글 */
-  header{text-align:center; margin-bottom:clamp(24px,5vw,44px)}
-  .logo{display:flex; justify-content:center; gap:clamp(2px,1vw,8px); margin:0; line-height:1;
-        font-size:clamp(56px,16vw,120px); font-weight:400}
-  .logo span{display:inline-block; text-shadow:0 5px 0 rgba(74,52,38,.14); animation:bounce 2.4s ease-in-out infinite}
+  header{text-align:center; margin-bottom:calc(var(--u)*2.2)}
+  .logo{display:flex; justify-content:center; gap:clamp(2px,.7vw,8px); margin:0; line-height:1;
+        font-size:clamp(46px,calc(var(--u)*9.5),120px); font-weight:400}
+  .logo span{display:inline-block; text-shadow:0 .05em 0 rgba(74,52,38,.14); animation:bounce 2.4s ease-in-out infinite}
   .logo span:nth-child(1){color:var(--pink)}
   .logo span:nth-child(2){color:var(--orange);animation-delay:.15s}
   .logo span:nth-child(3){color:var(--lemon); animation-delay:.3s}
   .logo span:nth-child(4){color:var(--mint);  animation-delay:.45s}
   .logo span:nth-child(5){color:var(--sky);   animation-delay:.6s}
-  @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-14px)}}
-  .tagline{display:inline-block; margin:14px 0 0; padding:8px 20px; background:rgba(255,255,255,.8);
-           border-radius:999px; font-size:clamp(16px,3.6vw,22px); color:var(--ink-soft);
+  @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-.12em)}}
+  .tagline{display:inline-block; margin:calc(var(--u)*1.1) 0 0; padding:.4em 1.1em; background:rgba(255,255,255,.8);
+           border-radius:999px; font-size:clamp(14px,calc(var(--u)*2),22px); color:var(--ink-soft);
            box-shadow:0 4px 0 rgba(74,52,38,.08)}
-  .lead{margin:18px 0 0; font-size:clamp(18px,4vw,26px)}
+  .lead{margin:calc(var(--u)*1.2) 0 0; font-size:clamp(16px,calc(var(--u)*2.6),26px)}
 
   /* 카드 */
-  .grid{display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(16px,3vw,26px); list-style:none; margin:0; padding:0}
-  .grid > li{flex:1 1 210px; max-width:260px}
+  .grid{display:flex; flex-wrap:wrap; justify-content:center; gap:calc(var(--u)*2); list-style:none; margin:0; padding:0}
+  .grid > li{flex:0 1 calc((100% - var(--u)*6)/4); min-width:150px; max-width:270px}
   .card{
     --c:var(--pink); --cbg:var(--pink-bg);
-    display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;
-    height:100%; padding:26px 18px 22px; color:inherit; text-decoration:none;
-    background:var(--card); border:4px solid var(--c); border-radius:32px;
-    box-shadow:0 8px 0 var(--c), 0 18px 30px rgba(74,52,38,.12);
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:calc(var(--u)*.5);
+    height:100%; padding:calc(var(--u)*2) calc(var(--u)*1.4) calc(var(--u)*1.8); color:inherit; text-decoration:none;
+    background:var(--card); border:clamp(3px,calc(var(--u)*.4),4px) solid var(--c); border-radius:calc(var(--u)*2.8);
+    box-shadow:0 calc(var(--u)*.7) 0 var(--c), 0 calc(var(--u)*1.6) calc(var(--u)*2.6) rgba(74,52,38,.12);
     transition:transform .18s cubic-bezier(.3,1.6,.5,1), box-shadow .18s;
     -webkit-tap-highlight-color:transparent;
   }
   .grid li:nth-child(odd) .card{transform:rotate(-1.5deg)}
   .grid li:nth-child(even) .card{transform:rotate(1.5deg)}
-  .card:hover,.card:focus-visible{transform:translateY(-8px) rotate(0) scale(1.03); box-shadow:0 14px 0 var(--c), 0 26px 36px rgba(74,52,38,.16); outline:none}
+  .card:hover,.card:focus-visible{transform:translateY(-6px) rotate(0) scale(1.03); box-shadow:0 calc(var(--u)*1.2) 0 var(--c), 0 calc(var(--u)*2.2) calc(var(--u)*3) rgba(74,52,38,.16); outline:none}
   .card:focus-visible{outline:4px dashed var(--ink); outline-offset:4px}
   .card:active{transform:translateY(2px) scale(.98); box-shadow:0 4px 0 var(--c)}
   .badge{
-    display:grid; place-items:center; width:104px; height:104px; border-radius:50%;
-    background:var(--cbg); border:4px dashed var(--c); font-size:50px; line-height:1; margin-bottom:6px;
-    transition:transform .3s;
+    --b:clamp(60px,calc(var(--u)*9),104px);
+    display:grid; place-items:center; width:var(--b); height:var(--b); border-radius:50%;
+    background:var(--cbg); border:clamp(3px,calc(var(--u)*.4),4px) dashed var(--c);
+    font-size:calc(var(--b)*.48); line-height:1; margin-bottom:calc(var(--u)*.4);
   }
   .card:hover .badge,.card:focus-visible .badge{animation:wiggle .6s ease-in-out}
   @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg) scale(1.08)}75%{transform:rotate(12deg) scale(1.08)}}
-  .name{font-size:clamp(22px,4.4vw,26px); line-height:1.25}
-  .desc{font-family:"Gowun Dodum",var(--font); font-size:16px; color:var(--ink-soft); line-height:1.45; min-height:2.9em; word-break:keep-all}
+  .name{font-size:clamp(17px,calc(var(--u)*2.5),26px); line-height:1.25}
+  .desc{font-family:"Gowun Dodum",var(--font); font-size:clamp(12px,calc(var(--u)*1.65),16px); color:var(--ink-soft); line-height:1.4; word-break:keep-all}
   .go{
-    margin-top:auto; padding:10px 24px; border-radius:999px; background:var(--c); color:#fff;
-    font-size:18px; box-shadow:0 4px 0 rgba(74,52,38,.2); text-shadow:0 1px 0 rgba(0,0,0,.12);
+    margin-top:auto; padding:.5em 1.4em; border-radius:999px; background:var(--c); color:#fff;
+    font-size:clamp(14px,calc(var(--u)*1.9),18px); box-shadow:0 4px 0 rgba(74,52,38,.2); text-shadow:0 1px 0 rgba(0,0,0,.12);
   }
   .card.pink{--c:var(--pink);--cbg:var(--pink-bg)}   .card.sky{--c:var(--sky);--cbg:var(--sky-bg)}
   .card.orange{--c:var(--orange);--cbg:var(--orange-bg)} .card.mint{--c:var(--mint);--cbg:var(--mint-bg)}
   .card.lemon{--c:var(--lemon);--cbg:var(--lemon-bg)} .card.lilac{--c:var(--lilac);--cbg:var(--lilac-bg)}
   .card.peach{--c:var(--peach);--cbg:var(--peach-bg)}
 
-  .empty{grid-column:1/-1; text-align:center; font-size:22px; padding:40px 0; list-style:none}
-  footer{position:relative; z-index:1; text-align:center; padding:12px 16px 36px; color:var(--ink-soft); font-size:15px}
+  .empty{width:100%; text-align:center; font-size:22px; padding:40px 0; list-style:none}
+  footer{position:relative; z-index:1; text-align:center; padding:4px 16px calc(var(--u)*1.6); color:var(--ink-soft); font-size:clamp(12px,calc(var(--u)*1.5),15px)}
+
+  /* 세로 화면·좁은 화면: 2열로 */
+  @media (orientation:portrait), (max-width:720px){
+    .grid > li{flex:0 1 calc((100% - var(--u)*2)/2); min-width:0; max-width:none}
+  }
+  /* 가로로 눕힌 낮은 화면: 안내 문구를 접어 공간 확보 */
+  @media (max-height:520px) and (orientation:landscape){
+    .lead{display:none} header{margin-bottom:calc(var(--u)*1.4)}
+  }
 
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important; transition:none!important}
