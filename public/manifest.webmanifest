@@ -1,0 +1,16 @@
+{
+  "name": "AIEDU - 놀면서 배우는 AI 교실",
+  "short_name": "AIEDU",
+  "description": "유아와 초등 저학년을 위한 놀이 서비스 모음",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff3d6",
+  "theme_color": "#fff3d6",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
