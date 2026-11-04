@@ -72,9 +72,17 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - **절차**: 저장소마다 `bash scripts/safe-push.sh <폴더> <메시지파일>` 로 커밋·push. 원격이 앞서 있거나, 충돌 표시·공백 오류가 있거나, unmerged 파일이 있으면 멈춘다. 멈추면 그 저장소만 따로 처리하고 나머지를 계속한다. `git stash` 로 우회하지 않는다.
 - push 전에 측정(`scripts/fit-check.mjs`)과 눈으로 보기를 먼저 하고, push 후 `curl .../apps.json` 의 sha 로 허브 반영을 확인한다.
 
+## 보안 (2026-11-04 점검·강화 완료)
+- 상세·점검 결과·사용자 몫: `references/security.md` (**서비스를 고치거나 추가하기 전에 3절 규칙을 읽는다**).
+- 핵심: **외부 호스트 호출 금지**(예외 `inputtools.google.com` 필기 인식 하나) — CSP 가 브라우저에서 차단한다. 글꼴은 `../fonts/<slug>.css`(자체 호스팅), 국기 등 이미지는 앱 저장소 안.
+- 빌드는 `apps.json` 을 검증하고(`scripts/lib.mjs`), 서비스의 `.github`·`CLAUDE.md`·`README.md`·`vercel.json` 등 내부 파일은 **배포에서 항상 제외**한다. 라이선스 고지(`source/LICENSE-*`)는 `exclude` 로 빼지 말 것.
+- 시험: `scripts/security/csp-monkey.cjs`(무작위 조작 중 CSP 위반), `net-audit.cjs`(외부 호스트·글꼴·깨진 이미지), `header-server.py`(vercel.json 헤더 적용 임시 서버). 서비스 추가·변경 후 **외부 호스트 0, CSP 위반 0**.
+- 워크플로: 외부 액션은 커밋 해시로 고정(+dependabot), `permissions` 최소화, 시간 제한. 훅 주소·Secret 값은 파일·커밋·로그에 쓰지 않는다.
+
 ## 이 클라우드 환경에서의 주의 (겪은 문제)
 - **작업 폴더**: 워커가 재시작되면 cwd 가 어긋나 `not a git repository` 가 난다. 항상 `cd /home/user/<저장소> && …` 로 시작. 쓰기 권한으로 붙인 저장소는 `/home/user/<이름>`, 읽기 전용은 `/home/user/arenarun23/<이름>`.
 - 저장소는 `add_repo`(access=push) 로 붙이고, clone 은 한 번에 하나씩, 시간제한 넉넉히. push 전 `git fetch origin main`, 겹치면 rebase (word 에서 다른 세션이 먼저 push 해 충돌한 적 있음 → 같은 앱을 두 세션에서 동시에 고치지 말 것).
+- `git push` 는 `remote rejected … Internal Server Error` 처럼 서버 일시 오류가 날 수 있다 → 재시도(2→4→8→16초). `safe-push.sh` 가 이미 재시도하며, **원격이 앞서 있어 거절(non-fast-forward)된 경우만** 즉시 멈춘다.
 - `gh`: GraphQL 은 막힘 → `gh api` REST 사용. Actions **Secrets 조회는 차단**(로그의 `HOOK: ***` 로 간접 확인). 워크플로 수동 실행은 `gh api -X POST repos/arenarun23/<repo>/actions/workflows/<파일>.yml/dispatches -f ref=main` 로 가능.
 - Vercel·GitHub **Secret 등록, Deploy Hook 생성, Vercel 프로젝트 삭제는 사용자가 직접** 해야 한다.
 - 커밋 메시지 끝에 시스템이 지정한 Co-Authored-By / Claude-Session 줄을 넣는다(heredoc 사용).
@@ -86,6 +94,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 
 ## 더 읽을 것
 - `references/layout-and-testing.md` — 화면 대응·테스트 방법과 수치
+- `references/security.md` — 보안 점검 결과·방어 구성·서비스 규칙·사용자 몫
 - `references/history.md` — 결정 이력(왜 이렇게 했나)
 - `scripts/safe-push.sh` — 저장소 커밋·push 안전 절차(충돌·원격 앞섬 감지)
 - `references/troubleshooting.md` — "반영이 안 돼요" 등 증상별 점검 순서

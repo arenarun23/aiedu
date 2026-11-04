@@ -16,5 +16,11 @@ if git diff --check | grep -q .; then echo "✋ $dir: git diff --check 경고"; 
 git add -A
 if git diff --cached --quiet; then echo "✋ $dir: 커밋할 변경이 없습니다."; exit 1; fi
 git -c user.name="${GIT_AUTHOR_NAME:-arenarun23}" -c user.email="${GIT_AUTHOR_EMAIL:-ahsa2000@usedu.ai.kr}" commit -q -F "$msg"
-git push -u origin main 2>&1 | tail -1
+# 네트워크·서버 일시 오류는 재시도(2s,4s,8s,16s). 원격이 앞서 있어 거절된 경우(non-fast-forward)만 재시도해도 소용없으므로 즉시 실패시킨다.
+for wait in 0 2 4 8 16; do
+  [ "$wait" -gt 0 ] && { echo "…push 재시도(${wait}초 대기)"; sleep "$wait"; }
+  if out=$(git push -u origin main 2>&1); then echo "$out" | tail -1; ok=1; break; fi
+  echo "$out" | grep -qE "non-fast-forward|fetch first|Updates were rejected" && { echo "$out" | tail -3; echo "✋ $dir: push 거절됨(원격 변경 확인 필요)"; exit 1; }
+done
+[ "${ok:-0}" = 1 ] || { echo "✋ $dir: push 실패(재시도 소진)"; exit 1; }
 echo "✔ $dir $(git rev-parse --short HEAD)"
