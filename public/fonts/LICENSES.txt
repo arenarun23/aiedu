@@ -1,0 +1,6 @@
+이 폴더의 글꼴은 SIL Open Font License 1.1 로 배포되며, 라이선스 전문은 licenses/ 폴더에 있습니다.
+- Jua (Copyright 2018 The Jua Project Authors)
+- Gowun Dodum (Copyright 2021 The Gowun Dodum Project Authors)
+- Noto Sans KR (Copyright 2014-2021 Adobe)
+- Noto Serif KR, Noto Serif TC (Copyright 2012 Google Inc.)
+Google Fonts(fonts.google.com)에서 받은 woff2 파일을 그대로 자체 호스팅합니다(방문자 IP가 구글로 전달되지 않도록).
