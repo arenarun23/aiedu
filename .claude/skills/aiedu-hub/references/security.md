@@ -52,6 +52,7 @@ node scripts/security/net-audit.cjs  http://127.0.0.1:8870/            # 외부 
 - 앱 작업본을 시험하려면 `dist` 대신 허브 `dist` 위에 앱 폴더를 덮어쓴 임시 폴더를 쓴다(앱은 `../fonts/` 를 허브에서 가져온다).
 - **시험이 제대로 감지하는지**: `vercel.json` 사본의 CSP 에서 일부러 도메인을 빼고 돌리면 위반이 잡혀야 한다(2026-11-04 확인).
 - 배포 후에는 같은 스크립트를 `https://aiedu-pearl.vercel.app/` 에 돌려 본다(읽기 요청 위주, 부하 시험 아님).
+- `hanja-offline-test.cjs <주소>`: 한자 앱의 사전·획수·서비스 워커·오프라인 시험(`SW_DELAY=5000` 으로 배포 환경 재현). 서비스 워커는 같은 출처의 앱·`../fonts/` 만 다루고 외부(필기 인식) 요청은 건드리지 않으며, 페이지가 보내는 `cache-urls` 메시지는 `../fonts/*.woff2` 만 받아들인다.
 
 ## 5. 사용자가 직접 해야 하는 것 (이 환경에서 접근 불가)
 - GitHub 계정 **2단계 인증·패스키**, 7개 저장소 **브랜치 보호**, **Secret Scanning·Push Protection**, 저장소 Settings → Security → **Private vulnerability reporting 켜기**
