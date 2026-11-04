@@ -24,6 +24,7 @@ description: AIEDU 허브에 들어 있는 서비스 6개(세계 국기 친구�
 - **저장소 상태 저장**은 `localStorage`(try/catch 로 감쌈; 시크릿 모드 대비).
 - 앱 수정 후: 로컬 서버로 열어 확인 → **여러 화면 크기에서 한 화면에 들어오는지**(`aiedu` 저장소의 `node scripts/fit-check.mjs <URL> --click "#시작버튼"`) → push → 허브 반영 확인(`aiedu-hub` 스킬의 troubleshooting).
 - 같은 앱을 두 세션이 동시에 고치지 않는다. push 전 `git fetch origin main`, 필요하면 rebase.
+- **허브 복귀 아이콘**: 모든 서비스는 같은 모양의 아이콘(`a.aiedu-home`, 웃는 별)을 **페이지 왼쪽 위**(`<body>` 첫 요소, 8px, 링크 `../`)에 둔다. 코드는 허브 저장소 `templates/aiedu-home.html`, 규칙·자리 비우는 방법은 `aiedu-hub` 스킬의 "허브 복귀 아이콘".
 - 새 서비스를 만들 때 지킬 규칙: 정적 파일·상대경로, viewport meta, 화면 크기 비례(rem+clamp), 큰 터치 영역(≥44px, 아이용은 더 크게), `prefers-reduced-motion` 존중, 서버·키 없이 동작. 만든 뒤 허브 등록은 `add-service` 스킬.
 
 ## 허브에서의 배포 설정 (apps.json 항목)

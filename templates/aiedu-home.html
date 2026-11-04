@@ -1,0 +1,10 @@
+<!-- AIEDU 허브로 가는 아이콘: 모든 서비스 공통 모양·위치(페이지 왼쪽 위, body 첫 요소). 아래 <style> 은 앱의 <style> 에 넣고, <a> 는 <body> 바로 다음에 넣는다.
+     앱마다 이 자리(왼쪽 위 52×52px)를 비워 주는 CSS 가 따로 필요하다: 제목 줄이면 .top{padding-left:52px}, 패널이면 위쪽 padding 등. -->
+<style>
+/* AIEDU 허브로 가는 아이콘 — 모든 서비스 공통 모양·위치: 페이지 왼쪽 위(body 첫 요소). 앱마다 이 자리를 비워 둔다 */
+.aiedu-home{position:absolute;left:max(8px,env(safe-area-inset-left,0px));top:max(8px,env(safe-area-inset-top,0px));z-index:1000;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(160deg,#ffe58f,#ffb08e);border:2px solid #fff;box-shadow:0 2px 0 rgba(74,52,38,.22);text-decoration:none;-webkit-tap-highlight-color:transparent}
+.aiedu-home svg{width:30px;height:30px;display:block}
+.aiedu-home:active{transform:translateY(2px);box-shadow:none}
+.aiedu-home:focus-visible{outline:3px solid #f08a00;outline-offset:2px}
+</style>
+<a class="aiedu-home" href="../" title="AIEDU 처음으로" aria-label="AIEDU 허브로 돌아가기"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><polygon points="32,6 39.2,23.6 58,25.2 43.7,37.6 48.1,56 32,46.2 15.9,56 20.3,37.6 6,25.2 24.8,23.6" fill="#ff7aa8" stroke="#ff7aa8" stroke-width="6" stroke-linejoin="round"/><ellipse cx="25.5" cy="33" rx="2.4" ry="3.2" fill="#4a3426"/><ellipse cx="38.5" cy="33" rx="2.4" ry="3.2" fill="#4a3426"/><ellipse cx="20.5" cy="39.5" rx="3.4" ry="2.1" fill="#ff4f86" opacity=".5"/><ellipse cx="43.5" cy="39.5" rx="3.4" ry="2.1" fill="#ff4f86" opacity=".5"/><path d="M28 39.5q4 4.4 8 0" fill="none" stroke="#4a3426" stroke-width="2.4" stroke-linecap="round"/></svg></a>

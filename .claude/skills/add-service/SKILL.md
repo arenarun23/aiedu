@@ -22,15 +22,17 @@ description: AIEDU 허브에 새 서비스(앱)를 추가하거나 제거·숨�
 3. `npm run build` 로 확인한다: 새 앱이 `✔` 로 나오고 `dist/<id>/index.html` 이 있어야 한다.
    로컬 서버(`python3 -m http.server -d dist`)로 허브 카드와 앱이 열리는지 본다.
 4. 커밋·push 한다 (main). Vercel 이 자동 배포한다.
-5. (선택) 즉시 반영이 필요한 앱: 그 앱 저장소에 `templates/notify-hub.yml` 을 `.github/workflows/notify-hub.yml` 로 복사해 push 하고,
+5. **허브 복귀 아이콘 확인**: 그 앱에 `a.aiedu-home` 이 없으면 `templates/aiedu-home.html` 의 CSS·링크를 넣고(`<body>` 첫 요소, 왼쪽 위 8px), 왼쪽 위 52×52px 를 비운다. 방법·검증은 `aiedu-hub` 스킬의 "허브 복귀 아이콘".
+6. (선택) 즉시 반영이 필요한 앱: 그 앱 저장소에 `templates/notify-hub.yml` 을 `.github/workflows/notify-hub.yml` 로 복사해 push 하고,
    사용자에게 앱 저장소 Secret `HUB_DEPLOY_HOOK` 등록을 안내한다(Secret 은 사용자가 직접 등록해야 한다).
-6. 결과를 보고한다: 추가한 앱, 반영 방식(자동 5~10분 / 즉시), 사용자가 해야 할 일이 있으면 그것만.
+7. 결과를 보고한다: 추가한 앱, 반영 방식(자동 5~10분 / 즉시), 사용자가 해야 할 일이 있으면 그것만.
 
 ## 제거 / 숨김
 - 숨김: 해당 줄에 `"enabled": false`. 완전 제거: 줄 삭제.
 - 앱 저장소는 건드리지 않는다. 앱 저장소의 `notify-hub.yml` 은 남겨도 무해하다고 알려 준다.
 
 ## 주의
+- 앱 저장소에 push 할 때는 `bash scripts/safe-push.sh <폴더> <메시지파일>` 를 쓴다(충돌·원격 앞섬 감지).
 - 사용자의 Secret/훅 주소를 파일, 커밋, 로그에 쓰지 않는다.
 - 비공개 저장소 앱은 Vercel 환경변수 `GITHUB_TOKEN` 이 필요하다고 안내한다.
 - 카드가 5개 이상이면 낮은 화면에서 스크롤이 생길 수 있다. 추가 후 1280x560 등에서 넘침을 확인한다.

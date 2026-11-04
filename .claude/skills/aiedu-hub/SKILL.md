@@ -46,7 +46,7 @@ public/  (허브 화면: index.html, 아이콘, manifest) ──> dist/ 로 복�
 - 검증: `node scripts/fit-check.mjs <URL>` (8가지 화면 크기에서 세로 넘침 측정). 현재 기준: 카드 4~6개에서 전부 0px, 360×640 만 4px(허용). 서비스 7개 이상은 작은 폰에서 스크롤이 생김(정상).
 - 상세·튜닝 이력: `references/layout-and-testing.md`
 
-## 아이콘
+## 허브 파비콘·홈 화면 아이콘
 `public/favicon.svg`(웃는 별, 원본) → `node scripts/make-icons.mjs` 가 favicon-32.png · favicon.ico · apple-touch-icon.png · icon-192/512.png · icon-maskable-512.png 재생성. `manifest.webmanifest`(이름 AIEDU, standalone). 모양을 바꾸려면 SVG 만 고치고 스크립트 실행.
 
 ## 자주 쓰는 명령
@@ -57,6 +57,20 @@ node scripts/fit-check.mjs http://localhost:8080/             # 화면 크기별
 node scripts/check-updates.mjs                                # 배포본 vs 최신 비교(SITE_URL 로 대상 변경)
 ```
 배포 확인: `curl -s https://aiedu-pearl.vercel.app/apps.json` 의 각 `sha` 가 앱 저장소 최신 커밋(앞 7자리)과 같으면 최신.
+
+## 허브 복귀 아이콘 (모든 서비스 공통 규칙)
+모든 서비스에는 AIEDU 허브로 돌아가는 **같은 모양의 아이콘**이 있다. 새 서비스에도 반드시 넣는다.
+- **모양**: 웃는 별 캐릭터(분홍 별, 노랑·복숭아 원형 버튼, 44px). 집 모양이 아닌 이유: `word`·`game` 에 앱 안 🏠(처음 화면) 버튼이 이미 있어 헷갈리기 때문.
+- **위치(통일)**: **페이지 왼쪽 위**, `left/top 8px`, `position:absolute`, `<body>` 바로 다음 첫 요소(컨테이너 안에 넣으면 좌표가 달라진다). 링크는 상대경로 `../`(허브 하위 경로에서 허브 첫 화면으로).
+- **자리 비우기**: 아이콘이 다른 요소를 가리지 않게 앱마다 왼쪽 위 52×52px 를 비운다. 현재 방식: 제목 줄이 있는 앱은 `.top{padding-left:52px}`(calcul·word), game 은 `#bar{padding-left:calc(.7rem + 46px)}`, hangul/hanja 는 `.left h2{padding-left:52px}` + 좁은/낮은 화면에서 `.left{padding-top:52px}`, flagmap 은 상태 말풍선이 가운데라 별도 처리 없음. 필기판·캔버스 위에는 두지 않는다(아이가 글씨를 쓰다 실수로 누르는 것 방지).
+- **원본 코드**: `templates/aiedu-home.html` (CSS + `<a>`). 아이콘 모양을 바꾸려면 이 파일과 6개 앱을 함께 고친다.
+- **검증**: 8가지 화면 크기에서 (1) 아이콘 좌표가 모두 `8,8` 인지 (2) 다른 버튼·입력·제목과 겹치지 않는지 (3) 넘침이 수정 전과 같은지. 확인된 기준(2026-11-04): 6개 앱 모두 `8,8`, 겹침 없음(한글·한자의 `h2` 박스 겹침은 글자가 52px 비켜 있어 실제 겹침 아님), 넘침 변화 없음(`calcul` 시작 화면의 기존 스크롤은 별개).
+
+## 여러 저장소를 한꺼번에 고칠 때 (사고 교훈 2026-11-04)
+- **사고 1**: 다른 세션이 먼저 올린 변경과 내 변경이 충돌한 상태에서 `git stash pop` → `git add -A` → push 가 그대로 진행되어 `<<<<<<<` 표시가 `game` main 에 올라갔다(약 15초 후 정정). **충돌이 나면 멈추고, 충돌 표시를 지운 뒤 푸시한다. `git add -A` 는 충돌 파일을 "해결됨"으로 표시해 버린다.**
+- **사고 2**: "내 CSS 줄 제거"를 `.aiedu-home` 가 들어간 줄 전체 삭제로 처리했다가, **내 CSS 가 뒤에 붙어 있던 원래 한 줄짜리 `<style>`**(calcul)까지 지워 숨김 규칙(`[hidden]{display:none!important}`)이 사라지고 화면이 크게 깨졌다. push 전 측정에서 잡았다. **자동 치환·삭제 후에는 HEAD 대비 삭제된 줄(`git diff HEAD -U0 | grep '^-'`)을 반드시 눈으로 확인한다.** 내 코드는 앱의 기존 줄 끝에 이어 붙이지 말고 별도 줄/블록으로 넣는다.
+- **절차**: 저장소마다 `bash scripts/safe-push.sh <폴더> <메시지파일>` 로 커밋·push. 원격이 앞서 있거나, 충돌 표시·공백 오류가 있거나, unmerged 파일이 있으면 멈춘다. 멈추면 그 저장소만 따로 처리하고 나머지를 계속한다. `git stash` 로 우회하지 않는다.
+- push 전에 측정(`scripts/fit-check.mjs`)과 눈으로 보기를 먼저 하고, push 후 `curl .../apps.json` 의 sha 로 허브 반영을 확인한다.
 
 ## 이 클라우드 환경에서의 주의 (겪은 문제)
 - **작업 폴더**: 워커가 재시작되면 cwd 가 어긋나 `not a git repository` 가 난다. 항상 `cd /home/user/<저장소> && …` 로 시작. 쓰기 권한으로 붙인 저장소는 `/home/user/<이름>`, 읽기 전용은 `/home/user/arenarun23/<이름>`.
@@ -73,6 +87,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 ## 더 읽을 것
 - `references/layout-and-testing.md` — 화면 대응·테스트 방법과 수치
 - `references/history.md` — 결정 이력(왜 이렇게 했나)
+- `scripts/safe-push.sh` — 저장소 커밋·push 안전 절차(충돌·원격 앞섬 감지)
 - `references/troubleshooting.md` — "반영이 안 돼요" 등 증상별 점검 순서
 - `aiedu-services` 스킬 — 서비스 5개 각각의 설명
 - `add-service` 스킬 — 서비스 추가/제거 절차
