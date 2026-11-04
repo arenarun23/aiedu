@@ -5,14 +5,14 @@ description: AIEDU 허브 사이트(유아·초등 저학년 놀이 서비스 �
 
 # AIEDU 허브 — 이어받기 가이드
 
-유아·초등 저학년용 정적 웹앱 5개를 한 곳에서 보여 주는 허브. 서비스는 자주 추가/삭제된다.
+유아·초등 저학년용 정적 웹앱 6개를 한 곳에서 보여 주는 허브. 서비스는 자주 추가/삭제된다.
 
 ## 한눈에
 | 항목 | 값 |
 |---|---|
 | 허브 저장소 | `arenarun23/aiedu` (main 에 push → Vercel 자동 배포) |
 | 허브 주소 | https://aiedu-pearl.vercel.app |
-| 서비스 5개 | flagmap(국기) · hangul(한글 쓰기) · hanja(한자 찾기) · calcul(소리셈) · word(끝말잇기) — 각각 `arenarun23/<이름>` 저장소. 자세히는 `aiedu-services` 스킬 |
+| 서비스 6개 | flagmap(국기) · hangul(한글 쓰기) · hanja(한자 찾기) · calcul(소리셈) · word(끝말잇기) · game(게임 모음) — 각각 `arenarun23/<이름>` 저장소. 자세히는 `aiedu-services` 스킬 |
 | 호스팅 | Vercel (Hobby), 프로젝트 `aiedu`. 허브 저장소를 연결해 push 마다 배포 |
 | 서비스 추가/제거 | `add-service` 스킬 (또는 `apps.json` 직접 수정) |
 
@@ -32,7 +32,7 @@ public/  (허브 화면: index.html, 아이콘, manifest) ──> dist/ 로 복�
 두 겹으로 되어 있다.
 1. **즉시**: 앱 저장소의 `.github/workflows/notify-hub.yml` 이 main push 때 허브의 Vercel **Deploy Hook**(`apps-updated`)을 POST → 20~60초 안에 허브 재배포.
    - 필요: 각 앱 저장소 Secret `HUB_DEPLOY_HOOK` (값 = Vercel aiedu > Settings > Git > Deploy Hooks 의 주소). **Secret 이 없으면 워크플로는 "건너뜁니다"로 조용히 성공 처리**되므로 로그의 `HOOK:` 값이 `***` 인지 본다.
-   - 6개 저장소(허브+앱 5) 모두 등록 확인됨(2026-11-03).
+   - 허브+앱 5개 저장소는 등록 확인됨(2026-11-03). `game` 저장소는 Secret 등록 여부를 첫 push 의 Actions 로그(`HOOK: ***`)로 확인할 것.
 2. **안전망**: 허브의 `.github/workflows/sync-apps.yml` 이 5분마다 `scripts/check-updates.mjs` 실행 → 배포된 `apps.json` 의 sha 와 각 앱의 최신 커밋(`git ls-remote`) 비교, 다르면 Deploy Hook 호출(종료코드 10 = 갱신 필요). 허브 저장소에도 `HUB_DEPLOY_HOOK` 필요, 선택 변수 `SITE_URL`.
    - **GitHub 예약(cron) 실행은 신뢰할 수 없다**: 만든 뒤 85분 동안 한 번도 안 돈 적이 있다. 즉시 알림(1번)이 주력, 2번은 보조.
 - 훅 주소는 비밀번호처럼 취급: 파일·커밋·로그에 적지 않는다.
@@ -40,10 +40,10 @@ public/  (허브 화면: index.html, 아이콘, manifest) ──> dist/ 로 복�
 
 ## 허브 화면 규칙 (public/index.html) — 깨뜨리지 말 것
 - **한 화면에 맞추기가 핵심 요구**(태블릿 가로에서 잘림이 실제 문제였다). 기준 단위 `--u = min(1vw, 1.6vh × --k)`; 로고·카드·글자·여백이 `--u` 비례.
-- JS 가 카드 수·방향으로 `--cols`, `--k` 를 계산(가로 최대 4열/세로·좁은 폭 2열, 행이 늘면 크기 배율 `--k` 감소). 5개 → 가로 3+2, 4개 → 한 줄.
+- JS 가 카드 수·방향으로 `--cols`, `--k` 를 계산(가로 최대 4열/세로·좁은 폭 2열, 행이 늘면 크기 배율 `--k` 감소). 5개 → 가로 3+2, 6개 → 3+3, 4개 → 한 줄.
 - 낮은 화면(≤460px)은 카드 설명 숨김, 작은 폰 세로(≤700px)는 안내 문구 숨김. `prefers-reduced-motion` 은 애니메이션 끔.
-- 색: pink · sky · orange · mint · lemon · lilac · peach (현재 사용: pink/sky/orange/mint/lilac). 카드 순서 = `apps.json` 순서.
-- 검증: `node scripts/fit-check.mjs <URL>` (8가지 화면 크기에서 세로 넘침 측정). 현재 기준: 카드 4~5개에서 전부 0px, 360×640 만 4px(허용). 서비스 7개 이상은 작은 폰에서 스크롤이 생김(정상).
+- 색: pink · sky · orange · mint · lemon · lilac · peach (현재 사용: pink/sky/orange/mint/lilac/peach, 남은 색 lemon — 흰 글씨 대비가 낮아 주의). 카드 순서 = `apps.json` 순서.
+- 검증: `node scripts/fit-check.mjs <URL>` (8가지 화면 크기에서 세로 넘침 측정). 현재 기준: 카드 4~6개에서 전부 0px, 360×640 만 4px(허용). 서비스 7개 이상은 작은 폰에서 스크롤이 생김(정상).
 - 상세·튜닝 이력: `references/layout-and-testing.md`
 
 ## 아이콘
@@ -68,7 +68,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 ## 미해결·결정 대기
 - 삼성 인터넷에서 새 창이 안 뜨고 같은 창으로 이동한다는 제보: `target=_blank` 는 정상 코드. 캐시 또는 바로가기(PWA) 모드 의심. 시크릿 모드로 확인 요청한 상태(결과 미수신). 필요하면 클릭 시 `window.open` 폴백 추가.
 - `hangul` 은 자체 Vercel 프로젝트(`hangul-xi-jet.vercel.app`)가 따로 있다. 허브는 쓰지 않으므로 사용자가 지워도 된다(미정).
-- 앱 5개 모두 즉시 알림(notify-hub + Secret)으로 연결해 두었다. 새 앱도 같은 방식으로 연결할 것.
+- 앱 6개 모두 즉시 알림(notify-hub + Secret)으로 연결해 두었다. 새 앱도 같은 방식으로 연결할 것.
 
 ## 더 읽을 것
 - `references/layout-and-testing.md` — 화면 대응·테스트 방법과 수치
