@@ -8,3 +8,12 @@
 .aiedu-home:focus-visible{outline:3px solid #f08a00;outline-offset:2px}
 </style>
 <a class="aiedu-home" href="../" title="AIEDU 처음으로" aria-label="AIEDU 허브로 돌아가기"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><polygon points="32,6 39.2,23.6 58,25.2 43.7,37.6 48.1,56 32,46.2 15.9,56 20.3,37.6 6,25.2 24.8,23.6" fill="#ff7aa8" stroke="#ff7aa8" stroke-width="6" stroke-linejoin="round"/><ellipse cx="25.5" cy="33" rx="2.4" ry="3.2" fill="#4a3426"/><ellipse cx="38.5" cy="33" rx="2.4" ry="3.2" fill="#4a3426"/><ellipse cx="20.5" cy="39.5" rx="3.4" ry="2.1" fill="#ff4f86" opacity=".5"/><ellipse cx="43.5" cy="39.5" rx="3.4" ry="2.1" fill="#ff4f86" opacity=".5"/><path d="M28 39.5q4 4.4 8 0" fill="none" stroke="#4a3426" stroke-width="2.4" stroke-linecap="round"/></svg></a>
+<script>
+/* AIEDU 복귀 아이콘 보호: 끌거나(8px 이상) 브라우저가 가로챈 동작(당겨서 새로 고침·스크롤)이나 페이지가 열린 직후 1초 안의 클릭은 무시하고, 의도한 한 번의 탭만 허브로 이동한다 */
+(function(){var a=document.querySelector('.aiedu-home');if(!a)return;var born=Date.now(),sx=0,sy=0,bad=false;
+a.addEventListener('pointerdown',function(e){sx=e.clientX;sy=e.clientY;bad=false},{passive:true});
+a.addEventListener('pointermove',function(e){if(Math.abs(e.clientX-sx)>8||Math.abs(e.clientY-sy)>8)bad=true},{passive:true});
+a.addEventListener('pointercancel',function(){bad=true},{passive:true});
+a.addEventListener('click',function(e){if(bad||Date.now()-born<1000){e.preventDefault();bad=false}});
+a.draggable=false;})();
+</script>
