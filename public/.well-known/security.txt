@@ -1,0 +1,7 @@
+# 보안 취약점 신고 창구 (RFC 9116)
+# GitHub 의 비공개 취약점 신고(Private vulnerability reporting)를 사용합니다. 공개 이슈로 올리지 말아 주세요.
+Contact: https://github.com/arenarun23/aiedu/security/advisories/new
+Expires: 2027-11-04T00:00:00.000Z
+Preferred-Languages: ko, en
+Canonical: https://aiedu-pearl.vercel.app/.well-known/security.txt
+Policy: https://github.com/arenarun23/aiedu/blob/main/SECURITY.md

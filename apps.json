@@ -1,8 +1,8 @@
 [
-  { "id": "flagmap", "name": "세계 국기 친구들", "desc": "세계 여러 나라의 국기를 만나요", "icon": "🚩", "color": "pink",   "repo": "arenarun23/flagmap", "enabled": true },
-  { "id": "hangul",  "name": "한글 쓰기",       "desc": "ㄱㄴㄷ 따라 쓰며 한글을 익혀요", "icon": "가", "color": "sky",    "repo": "arenarun23/hangul",  "enabled": true },
-  { "id": "hanja",   "name": "한자 찾기",       "desc": "말로 하면 한자가 나와요",       "icon": "漢", "color": "orange", "repo": "arenarun23/hanja",   "enabled": true, "exclude": ["source", "scripts", "package.json"] },
-  { "id": "calcul",  "name": "소리셈 놀이터",   "desc": "소리로 푸는 더하기 빼기 구구단", "icon": "➕", "color": "mint",   "repo": "arenarun23/calcul",  "enabled": true },
-  { "id": "word",    "name": "끝말잇기 놀이터", "desc": "말랑이와 끝말잇기를 해요",       "icon": "🔤", "color": "lilac",  "repo": "arenarun23/word",    "enabled": true, "exclude": ["source", "build-extra.mjs", "vercel.json"] },
-  { "id": "game",    "name": "놀이터 게임 모음", "desc": "색칠하고 짝 맞추는 미니게임",     "icon": "🎮", "color": "peach",  "repo": "arenarun23/game",    "enabled": true }
+  {"id": "flagmap", "name": "세계 국기 친구들", "desc": "세계 여러 나라의 국기를 만나요", "icon": "🚩", "color": "pink", "repo": "arenarun23/flagmap", "enabled": true},
+  {"id": "hangul", "name": "한글 쓰기", "desc": "ㄱㄴㄷ 따라 쓰며 한글을 익혀요", "icon": "가", "color": "sky", "repo": "arenarun23/hangul", "enabled": true},
+  {"id": "hanja", "name": "한자 찾기", "desc": "말로 하면 한자가 나와요", "icon": "漢", "color": "orange", "repo": "arenarun23/hanja", "enabled": true, "exclude": ["source/hanja.txt", "source/levels.json", "scripts"]},
+  {"id": "calcul", "name": "소리셈 놀이터", "desc": "소리로 푸는 더하기 빼기 구구단", "icon": "➕", "color": "mint", "repo": "arenarun23/calcul", "enabled": true},
+  {"id": "word", "name": "끝말잇기 놀이터", "desc": "말랑이와 끝말잇기를 해요", "icon": "🔤", "color": "lilac", "repo": "arenarun23/word", "enabled": true, "exclude": ["source/ko-nouns.txt", "build-extra.mjs"]},
+  {"id": "game", "name": "놀이터 게임 모음", "desc": "색칠하고 짝 맞추는 미니게임", "icon": "🎮", "color": "peach", "repo": "arenarun23/game", "enabled": true}
 ]

@@ -1,0 +1,9 @@
+# 워크플로에서 쓰는 외부 액션(커밋 해시로 고정함)의 새 버전을 주 1회 확인해 업데이트 PR 을 만든다.
+# 해시 고정은 태그 바꿔치기 공격을 막지만, 업데이트를 잊으면 보안 수정이 빠지므로 이 설정과 함께 쓴다.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3

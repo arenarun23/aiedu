@@ -2,10 +2,11 @@
 // 다르면 exit 10 (워크플로가 Deploy Hook 을 호출), 같으면 exit 0.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { gitEnv, validateApps } from './lib.mjs';
 
 const site = (process.env.SITE_URL || 'https://aiedu-pearl.vercel.app').replace(/\/$/, '');
-const token = process.env.GITHUB_TOKEN; // 비공개 저장소용(선택)
-const apps = JSON.parse(readFileSync('apps.json', 'utf8')).filter(a => a.enabled !== false && a.repo && !a.url);
+const env = gitEnv(process.env.GITHUB_TOKEN); // 비공개 저장소용(선택) — 토큰은 URL 이 아니라 환경변수 헤더로 전달
+const apps = validateApps(JSON.parse(readFileSync('apps.json', 'utf8'))).filter(a => a.enabled !== false && a.repo && !a.url);
 
 let deployed = {};
 try {
@@ -18,10 +19,10 @@ try {
 
 const stale = [];
 for (const a of apps) {
-  const url = `https://${token ? token + '@' : ''}github.com/${a.repo}.git`;
+  const url = `https://github.com/${a.repo}.git`;
   let latest = '';
   try {
-    latest = execFileSync('git', ['ls-remote', url, a.ref || 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/)[0];
+    latest = execFileSync('git', ['ls-remote', '--', url, a.ref || 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], env }).split(/\s+/)[0];
   } catch { console.log(`⚠ ${a.id}: 저장소를 읽지 못했습니다 (건너뜀)`); continue; }
   const same = deployed[a.id] === latest;
   console.log(`${same ? '✔' : '↻'} ${a.id}  배포 ${deployed[a.id]?.slice(0, 7) ?? '없음'}  최신 ${latest.slice(0, 7)}`);
