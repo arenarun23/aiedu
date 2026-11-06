@@ -1,6 +1,6 @@
 # AIEDU 허브
 
-유아·초등 저학년용 놀이 서비스 6개(flagmap·hangul·hanja·calcul·word·game)를 모은 허브 사이트. 이 저장소는 허브이고, 서비스는 각자 저장소다.
+유아·초등 저학년용 놀이 서비스 7개(flagmap·hangul·hanja·calcul·word·game·miro)를 모은 허브 사이트. 이 저장소는 허브이고, 서비스는 각자 저장소다.
 
 작업 전에 스킬을 읽는다(`.claude/skills/`):
 - `aiedu-hub` — 구조, 배포·자동 갱신, 화면 대응, 점검(**시작점**)

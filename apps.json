@@ -4,5 +4,6 @@
   {"id": "hanja", "name": "한자 찾기", "desc": "말로 하면 한자가 나와요", "icon": "漢", "color": "orange", "repo": "arenarun23/hanja", "enabled": true, "exclude": ["source/hanja.txt", "source/levels.json", "scripts", "source/unihan-subset.txt"]},
   {"id": "calcul", "name": "소리셈 놀이터", "desc": "소리로 푸는 더하기 빼기 구구단", "icon": "➕", "color": "mint", "repo": "arenarun23/calcul", "enabled": true},
   {"id": "word", "name": "끝말잇기 놀이터", "desc": "말랑이와 끝말잇기를 해요", "icon": "🔤", "color": "lilac", "repo": "arenarun23/word", "enabled": true, "exclude": ["source/ko-nouns.txt", "build-extra.mjs"]},
-  {"id": "game", "name": "놀이터 게임 모음", "desc": "색칠하고 짝 맞추는 미니게임", "icon": "🎮", "color": "peach", "repo": "arenarun23/game", "enabled": true}
+  {"id": "game", "name": "놀이터 게임 모음", "desc": "색칠하고 짝 맞추는 미니게임", "icon": "🎮", "color": "peach", "repo": "arenarun23/game", "enabled": true},
+  {"id": "miro", "name": "미로찾기", "desc": "길을 따라 친구를 만나요", "icon": "🧩", "color": "lemon", "repo": "arenarun23/miro", "enabled": true}
 ]
