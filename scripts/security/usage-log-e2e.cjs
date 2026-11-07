@@ -28,7 +28,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await pa.evaluate(() => window.dispatchEvent(new Event('pagehide')));     // 남은 시간을 서버로 보냄
   await pa.goto(BASE + 'game/', { waitUntil: 'networkidle' }); await sleep(400);
   await pa.click('.card >> nth=0').catch(() => {}); await sleep(800);
-  await pa.goto(BASE + 'miro/', { waitUntil: 'networkidle' }); await sleep(400);
+  await pa.goto(BASE + 'game/#maze', { waitUntil: 'networkidle' }); await sleep(400);   // 미로찾기(game 안의 게임)
   await pa.click('.card >> nth=0').catch(() => {}); await sleep(800);
 
   // ---------- 기기 B: 아이폰(서울, 코드 11) ----------
@@ -47,10 +47,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   ok(!bodies.join('').includes('홍길동') && !bodies.join('').includes('학교'), '아이가 입력한 내용(홍길동·학교)은 전송되지 않음');
   ok(parsed.every((p) => /^[a-f0-9]{24}$/.test(p.d)), '기기 번호는 무작위 24자리 16진수');
   const svcs = [...new Set(parsed.map((p) => p.s))].sort();
-  ok(['flagmap', 'game', 'hanja', 'hub', 'miro', 'word'].every((s) => svcs.includes(s)), '서비스 구분: ' + svcs.join(','));
+  ok(['flagmap', 'game', 'hanja', 'hub', 'word'].every((s) => svcs.includes(s)), '서비스 구분: ' + svcs.join(','));
   const evts = (s) => parsed.filter((p) => p.s === s).map((p) => p.e + (p.g ? ':' + p.g : ''));
   ok(evts('word').includes('start') && evts('word').includes('tick'), 'word: ' + evts('word').join(' '));
-  ok(evts('game').some((e) => e.startsWith('start:')) && evts('miro').some((e) => e.startsWith('start:')), 'game/miro 시작 + 게임 이름: ' + evts('game').concat(evts('miro')).join(' '));
+  ok(evts('game').some((e) => e.startsWith('start:')) && evts('game').includes('start:maze'), 'game 시작 + 게임 이름(미로 포함): ' + evts('game').join(' '));
   ok(evts('hanja').includes('use') && evts('flagmap').includes('use') === true || evts('flagmap').includes('open'), 'hanja/flagmap 사용 횟수: ' + evts('hanja').join(' '));
 
   // ---------- 관리자 ----------

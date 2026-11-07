@@ -24,7 +24,7 @@
 - **서비스 코드가 `aieduLog()` 에 넘기는 값은 이벤트 종류(`start`·`finish`·`use`)와 영문 소문자·숫자·`_-` 20자 이내의 태그뿐**이다. 사용자 입력·화면 내용·나라 이름을 태그로 넘기지 않는다. 서버도 형식이 다르면 태그를 버린다.
 
 ## 현재 심어 둔 지점
-game·miro `G.start`(start+게임 이름)/`G.win`(finish) · word `startGame`/`finish`(kidwin|botwin) · calcul `#btnGo`/`finish` · hangul·hanja `lookup`(use) · flagmap `show`(use). 열기(open)와 이용 시간(tick)은 스크립트가 자동으로 보낸다(화면이 보이고 최근 90초 안에 조작이 있던 초만 60초마다 합산).
+game(미로 포함) `G.start`(start+게임 이름)/`G.win`(finish) · word `startGame`/`finish`(kidwin|botwin) · calcul `#btnGo`/`finish` · hangul·hanja `lookup`(use) · flagmap `show`(use). 열기(open)와 이용 시간(tick)은 스크립트가 자동으로 보낸다(화면이 보이고 최근 90초 안에 조작이 있던 초만 60초마다 합산).
 
 ## 운영자가 해야 하는 설정 (Vercel — 이 환경에서는 접근 불가)
 1. **저장소 연결**: Vercel 프로젝트 `aiedu` → Storage(또는 Marketplace) → **Upstash Redis** 연결. 환경변수 `KV_REST_API_URL`·`KV_REST_API_TOKEN`(또는 `UPSTASH_REDIS_REST_URL`·`_TOKEN`)이 자동으로 생긴다. **읽기·쓰기 토큰**이어야 한다(읽기 전용 토큰은 저장이 안 됨).

@@ -6,7 +6,7 @@ if os.path.isdir(out):
     shutil.rmtree(out)
 shutil.copytree('/home/user/aiedu/dist', out)
 EXCLUDE = ['.git', '.github', '.claude', 'CLAUDE.md', 'README.md', 'vercel.json', 'package.json']
-for app in ['flagmap', 'hangul', 'hanja', 'calcul', 'word', 'game', 'miro']:
+for app in ['flagmap', 'hangul', 'hanja', 'calcul', 'word', 'game']:
     dst = f'{out}/{app}'
     shutil.rmtree(dst, ignore_errors=True)
     os.makedirs(dst)

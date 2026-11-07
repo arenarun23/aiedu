@@ -75,6 +75,10 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/miro", "destination": "/game/#maze", "permanent": false },
+    { "source": "/miro/:path*", "destination": "/game/#maze", "permanent": false }
+  ],
   "functions": {
     "api/*.js": {
       "maxDuration": 10

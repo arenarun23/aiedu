@@ -1,4 +1,6 @@
-# miro — 미로찾기
+# 미로찾기 (game 안의 게임 — 옛 단독 서비스 miro)
+
+> **2026-11-07 `arenarun23/game` 의 한 게임(`js/games/maze.js`, `js/maze_music.js`, id `maze`)으로 옮겼다.** 허브 카드·`apps.json` 항목은 없앴고 `/miro/` 는 `/game/#maze` 로 리다이렉트된다. 수정은 **game 저장소**에서 한다(`arenarun23/miro` 는 더 이상 허브에 배포되지 않는다 — 코드 이력 보관용). 아래는 옮기기 전 단독 서비스 기준 설명이며, 게임 내용(난이도·방해꾼·음악·맵)은 그대로다. 달라진 점: 난이도 저장 키 `game:maze-level`, 음악 `G.mazeMusic`(저장 키 `game:maze:music`), 공통 난이도 막대 대신 `noSub`, 보너스 별 `G.win({bonus})`.
 
 - 저장소 `arenarun23/miro` · 허브 id `miro`(🧩, lemon). 레이싱 등이 있는 `game` 저장소와 같은 뼈대(`G` 도우미)를 쓰는 **단독 앱**: 처음 화면 없이 바로 미로가 열리고(`js/main.js` 가 `G.home`·`G.route` 를 미로 시작으로 바꿈), 결과 창의 "메뉴"는 새 미로.
 - 구조: `index.html`, `css/style.css`(game 의 공통·결과·막대 부분 + 미로), `js/core.js`(localStorage 접두어 `miro:` — 허브는 같은 출처라 `game:` 과 겹치면 안 됨), `js/games/maze.js`(미로 만들기·그리기·조작), `js/main.js`.

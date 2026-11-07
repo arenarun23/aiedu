@@ -8,3 +8,4 @@
 - 자체 `CLAUDE.md` 와 `.github/workflows/notify-hub.yml` 이 있고, 저장소 Secret `HUB_DEPLOY_HOOK` 이 필요하다.
 - 점검(2026-11-04): 단독 화면 8가지 크기 모두 세로 넘침 0px, 허브 `/game/` 새 탭 열기 오류 없음.
 - 수정 시: 터치 버튼 ≥44px, `prefers-reduced-motion` 존중, 각 게임을 끝까지 플레이해 확인.
+- **미로찾기(maze)** — 2026-11-07 단독 서비스 `arenarun23/miro` 에서 이 모음으로 옮겼다(허브 카드는 없앴고 `/miro/` 는 `/game/#maze` 로 리다이렉트: `vercel.json` `redirects`). 상세는 `references/miro.md`. 게임이 `noSub: true` 로 자기 메뉴를 쓰고(난이도 3단계·방해꾼·왼쪽 메뉴), 음악은 `G.mazeMusic`(레이싱 `G.music` 과 별개), `G.win({bonus})` 로 단계별 보너스 별을 준다.

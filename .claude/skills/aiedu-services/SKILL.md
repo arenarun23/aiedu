@@ -15,7 +15,6 @@ description: AIEDU 허브에 들어 있는 서비스 6개(세계 국기 친구�
 | calcul | 소리셈 놀이터 ➕ | arenarun23/calcul | 소리로 읽어 주는 더하기·빼기·구구단, 말·손글씨로 답 | 72KB | references/calcul.md |
 | word | 끝말잇기 놀이터 🔤 | arenarun23/word | 말랑이와 끝말잇기, 말·손글씨·힌트·"모르겠어" 추천 | 0.9MB | references/word.md |
 | game | 놀이터 게임 모음 🎮 | arenarun23/game | 한 페이지 안에서 고르는 미니게임 6종(색칠하기·점 잇기·짝 맞추기·다른 것 찾기·두더지 잡기·분류하기) | 92KB | references/game.md |
-| miro | 미로찾기 🧩 | arenarun23/miro | 손가락으로 길을 그려 짝꿍(🐭→🧀 등 8가지)에게 가는 미로, 쉬움/어려움·힌트 | 약 60KB | references/miro.md |
 
 허브 카드 문구·아이콘·색은 허브 `apps.json` 에 있다(앱 안 문구와 별개).
 
@@ -37,7 +36,6 @@ hanja    repo arenarun23/hanja    color orange  exclude [source/hanja.txt, sourc
 calcul   repo arenarun23/calcul   color mint
 word     repo arenarun23/word     color lilac   exclude [source/ko-nouns.txt, build-extra.mjs]   # source/LICENSE-* 는 배포에 남김
 game     repo arenarun23/game     color peach
-miro     repo arenarun23/miro     color lemon
 ```
 `exclude` 는 원본 데이터·빌드 스크립트를 배포에서 빼 용량을 줄이기 위한 것(런타임에 쓰는 `dict/`, `extra.txt` 는 반드시 포함).
 
