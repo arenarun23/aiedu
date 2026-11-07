@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이용 기록 안내 - AIEDU</title>
+<meta name="description" content="AIEDU가 모으는 익명 이용 기록 안내">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root{--bg:#fff8ef;--fg:#2b2118;--soft:#7a6652;--card:#fff;--line:#eadfce;--accent:#e2552d}
+  @media (prefers-color-scheme:dark){:root{--bg:#1c1814;--fg:#f3ebe0;--soft:#b9a58f;--card:#272119;--line:#3a3128;--accent:#ff8a63}}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.7 system-ui,-apple-system,"Noto Sans KR",sans-serif}
+  main{max-width:760px;margin:0 auto;padding:24px 16px 56px} h1{font-size:1.6rem;margin:.2em 0 .4em} h2{font-size:1.15rem;margin:1.6em 0 .4em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:12px 0}
+  ul{padding-left:1.2em;margin:.3em 0} li{margin:.2em 0} .soft{color:var(--soft);font-size:.92rem}
+  a{color:var(--accent)} button{font:inherit;padding:.6em 1.2em;border-radius:999px;border:0;background:var(--accent);color:#fff;cursor:pointer;min-height:44px}
+  .draft{border-color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <p><a href="./">← AIEDU 처음으로</a></p>
+  <h1>이용 기록 안내</h1>
+  <p class="soft">AIEDU는 놀이 서비스가 잘 쓰이고 있는지 살피기 위해 <b>익명</b> 이용 기록을 모을 수 있습니다. 서버 설정에서 켜져 있을 때만 모으며, 이 안내는 그때의 내용입니다.</p>
+
+  <div class="card draft"><b>※ 초안입니다.</b> 운영자는 학교(기관)의 개인정보 담당자와 협의해 연락처·보관 기간·동의 방법을 확정한 뒤 게시해 주세요.</div>
+
+  <h2>모으는 것</h2>
+  <ul>
+    <li>이 기기에서 만든 <b>무작위 번호</b>(이름·계정과 연결되지 않음)</li>
+    <li>기기 종류(폰·태블릿·PC), 운영체제, 브라우저, 화면 크기</li>
+    <li>대략적인 위치: <b>국가와 시·도</b> 수준(자세한 주소·IP 주소는 저장하지 않음)</li>
+    <li>어떤 서비스를 열었는지, 시작·완료 횟수, 이용 시간(초), 화면을 누른 횟수</li>
+  </ul>
+  <h2>모으지 않는 것</h2>
+  <ul>
+    <li>아이가 입력한 낱말, 손글씨, 음성, 정답 내용</li>
+    <li>이름, 학교·학급 이름, 계정, 연락처, IP 주소, 브라우저 원문 정보</li>
+  </ul>
+  <h2>왜, 누가, 얼마나</h2>
+  <ul>
+    <li>목적: 서비스가 어떤 기기에서 얼마나 쓰이는지 확인하고 고치기 위해서입니다.</li>
+    <li>열람: 관리자만 볼 수 있습니다.</li>
+    <li>보관: <b>90일</b>이 지나면 자동으로 삭제됩니다. 요청하면 즉시 삭제할 수 있습니다.</li>
+    <li>문의·삭제 요청: <span class="soft">[담당자 이름·연락처를 여기에 적어 주세요]</span></li>
+  </ul>
+
+  <h2>이 기기에서 기록 끄기</h2>
+  <div class="card">
+    <p id="state" aria-live="polite">상태를 확인하는 중…</p>
+    <button id="toggle" type="button">기록 끄기</button>
+    <p class="soft">브라우저의 '추적 안 함(Do Not Track)' 또는 'Global Privacy Control' 설정을 켜 두면 자동으로 기록하지 않습니다. 브라우저 데이터를 지우면 무작위 번호가 새로 만들어집니다.</p>
+  </div>
+</main>
+<script src="privacy.js"></script>
+</body>
+</html>

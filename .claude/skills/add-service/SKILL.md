@@ -24,10 +24,11 @@ description: AIEDU 허브에 새 서비스(앱)를 추가하거나 제거·숨�
    로컬 서버(`python3 -m http.server -d dist`)로 허브 카드와 앱이 열리는지 본다.
 5. 보안 시험: `scripts/security/net-audit.cjs` 와 `csp-monkey.cjs` 로 **외부 호스트 0 · CSP 위반 0** 확인(사용법은 `references/security.md` 4절).
 6. 커밋·push 한다 (main). Vercel 이 자동 배포한다.
-7. **허브 복귀 아이콘 확인**: 그 앱에 `a.aiedu-home` 이 없으면 `templates/aiedu-home.html` 의 CSS·링크를 넣고(`<body>` 첫 요소, 왼쪽 위 8px), 왼쪽 위 52×52px 를 비운다. 방법·검증은 `aiedu-hub` 스킬의 "허브 복귀 아이콘".
-8. (선택) 즉시 반영이 필요한 앱: 그 앱 저장소에 `templates/notify-hub.yml` 을 `.github/workflows/notify-hub.yml` 로 복사해 push 하고,
+7. **이용 기록 연결**: 새 서비스 `<head>` 에 `<script src="../aiedu-log.js"></script>`, `api/_lib/log-core.js` 의 `SERVICES` 와 `public/admin/admin.js` 의 `SVC` 에 id 추가(`aiedu-hub` 스킬 `references/usage-log.md`). 입력 내용은 `aieduLog()` 에 넘기지 않는다.
+8. **허브 복귀 아이콘 확인**: 그 앱에 `a.aiedu-home` 이 없으면 `templates/aiedu-home.html` 의 CSS·링크를 넣고(`<body>` 첫 요소, 왼쪽 위 8px), 왼쪽 위 52×52px 를 비운다. 방법·검증은 `aiedu-hub` 스킬의 "허브 복귀 아이콘".
+9. (선택) 즉시 반영이 필요한 앱: 그 앱 저장소에 `templates/notify-hub.yml` 을 `.github/workflows/notify-hub.yml` 로 복사해 push 하고,
    사용자에게 앱 저장소 Secret `HUB_DEPLOY_HOOK` 등록을 안내한다(Secret 은 사용자가 직접 등록해야 한다).
-9. 결과를 보고한다: 추가한 앱, 반영 방식(자동 5~10분 / 즉시), 사용자가 해야 할 일이 있으면 그것만.
+10. 결과를 보고한다: 추가한 앱, 반영 방식(자동 5~10분 / 즉시), 사용자가 해야 할 일이 있으면 그것만.
 
 ## 제거 / 숨김
 - 숨김: 해당 줄에 `"enabled": false`. 완전 제거: 줄 삭제.

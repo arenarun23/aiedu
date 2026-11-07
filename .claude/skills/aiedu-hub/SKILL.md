@@ -72,6 +72,12 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - **절차**: 저장소마다 `bash scripts/safe-push.sh <폴더> <메시지파일>` 로 커밋·push. 원격이 앞서 있거나, 충돌 표시·공백 오류가 있거나, unmerged 파일이 있으면 멈춘다. 멈추면 그 저장소만 따로 처리하고 나머지를 계속한다. `git stash` 로 우회하지 않는다.
 - push 전에 측정(`scripts/fit-check.mjs`)과 눈으로 보기를 먼저 하고, push 후 `curl .../apps.json` 의 sha 로 허브 반영을 확인한다.
 
+## 이용 기록(익명)과 관리자 페이지 (2026-11-07)
+- 기기·위치(시·도)·활동(열기·시작·완료·이용 시간) 기록을 모아 **비밀 링크(`/admin/#값`)로만 열리는 관리자 페이지**에서 본다. 서버 함수 2개(`api/log.js`·`api/admin.js`)와 Upstash Redis 를 쓴다. **서버 환경변수 `LOGGING_ENABLED=1` 이 아니면 아무것도 저장하지 않는다.**
+- 구조·설정(운영자가 Vercel 에서 할 일)·보안 설계·시험·한계: `references/usage-log.md`. 입력 내용·IP 는 기록하지 않는다. `aieduLog()` 에는 이벤트 종류와 안전한 태그만 넘긴다.
+- 서비스를 추가하면 `<head>` 에 `<script src="../aiedu-log.js"></script>`, `api/_lib/log-core.js` 의 `SERVICES`, `public/admin/admin.js` 의 `SVC` 를 함께 고친다.
+- 이 세션처럼 `GITHUB_TOKEN` 이 환경에 있으면 연결하지 않은 공개 저장소(miro 등)를 빌드가 못 받는다 → `env -u GITHUB_TOKEN npm run build`.
+
 ## 보안 (2026-11-04 점검·강화 완료)
 - 상세·점검 결과·사용자 몫: `references/security.md` (**서비스를 고치거나 추가하기 전에 3절 규칙을 읽는다**).
 - 핵심: **외부 호스트 호출 금지**(예외 `inputtools.google.com` 필기 인식 하나) — CSP 가 브라우저에서 차단한다. 글꼴은 `../fonts/<slug>.css`(자체 호스팅), 국기 등 이미지는 앱 저장소 안.
@@ -95,6 +101,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 ## 더 읽을 것
 - `references/layout-and-testing.md` — 화면 대응·테스트 방법과 수치
 - `references/security.md` — 보안 점검 결과·방어 구성·서비스 규칙·사용자 몫
+- `references/usage-log.md` — 이용 기록·관리자 페이지(구조·설정·보안·시험)
 - `references/history.md` — 결정 이력(왜 이렇게 했나)
 - `scripts/safe-push.sh` — 저장소 커밋·push 안전 절차(충돌·원격 앞섬 감지)
 - `references/troubleshooting.md` — "반영이 안 돼요" 등 증상별 점검 순서
