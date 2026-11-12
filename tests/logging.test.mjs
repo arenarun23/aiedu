@@ -190,3 +190,23 @@ test('보관 기간: 90일이 지나면 기기 기록·이벤트·일별 집계�
   s2.clock.t += 31 * 86400000;
   assert.equal((await s2.store.exec([['HGETALL', `aiedu:dev:${ID}`]]))[0].length, 0);
 });
+
+test('오프라인에서 쌓인 기록(ts)은 원래 날짜로 반영되고, 마지막 접속 시각은 되돌리지 않으며, 7일 넘은 것·형식 오류는 버린다', async () => {
+  const { store, clock } = mk();
+  await handleLog(logReq(ev(), { store, now: clock.t }));                               // 현재 접속
+  const lastBefore = store.data.get(`aiedu:dev:${ID}`).v.last;
+  const twoDays = clock.t - 2 * 86400000;
+  await handleLog(logReq(ev({ e: 'tick', t: 50, a: 7, ts: twoDays }), { store, now: clock.t }));
+  await handleLog(logReq(ev({ e: 'start', g: 'memory', ts: twoDays }), { store, now: clock.t }));
+  const oldDay = new Date(twoDays + 9 * 3600000).toISOString().slice(0, 10);
+  const dk = store.data.get(`aiedu:day:${oldDay}`).v;
+  assert.equal(dk['sec:word'], '50'); assert.equal(dk['start:word'], '1');
+  assert.equal(store.data.get(`aiedu:dev:${ID}`).v.last, lastBefore, '늦게 도착한 기록이 마지막 접속 시각을 바꾸면 안 됨');
+  const events = store.data.get(`aiedu:ev:${ID}`).v;
+  assert.ok(events.some((x) => x.startsWith(twoDays + '|word|start')));
+  const before = JSON.stringify([...store.data.keys()]);
+  for (const ts of [clock.t - 8 * 86400000, 'x', 1.5, -5, null]) await handleLog(logReq(ev({ e: 'use', ts }), { store, now: clock.t }));
+  assert.equal(JSON.stringify([...store.data.keys()]), before); assert.equal(store.data.get(`aiedu:day:2026-11-07`).v['use:word'], undefined, '버려져야 함');
+  await handleLog(logReq(ev({ e: 'use', ts: clock.t + 3600000 }), { store, now: clock.t }));   // 미래 시각은 지금으로 처리
+  assert.equal(store.data.get(`aiedu:day:2026-11-07`).v['use:word'], '1');
+});

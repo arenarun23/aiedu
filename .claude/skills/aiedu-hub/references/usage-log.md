@@ -42,6 +42,11 @@ game(미로 포함) `G.start`(start+게임 이름)/`G.win`(finish) · word `star
 - IP 는 저장하지 않고, 횟수 제한용으로만 **매일 바뀌는 해시**를 쓴다.
 - CSP 는 바뀌지 않았다: `script-src 'self'`(`/aiedu-log.js`, `/admin/admin.js`), `connect-src 'self'`(같은 출처 `/api/*`).
 
+## 오프라인에서 쌓인 기록 (2026-11-12)
+- 클라이언트(`aiedu-log.js`)는 `fetch` 로 보내고(응답 확인), 인터넷이 없거나 실패(네트워크 오류·5xx)하면 기록을 **이 기기 localStorage `aiedu-log-q`** 에 쌓는다(최대 200건·7일, 같은 서비스 이용 시간은 합침). 서비스를 열 때·`online` 이벤트·전송 성공 뒤에 순서대로(한 번에 30건) 보내고, 성공 또는 서버 거절(4xx)이면 지운다. 닫는 중(`pagehide`)에는 `sendBeacon`, 오프라인이면 쌓는다. 쌓는 내용은 보내는 내용과 같다(입력 내용·IP 없음).
+- 각 기록에는 발생 시각 `ts`(ms)가 붙는다. 서버는 `ts` 가 7일보다 오래됐거나 형식이 틀리면 버리고, 미래면 지금으로 본다. 늦게 도착한 기록(2분 넘게 과거)은 **원래 날짜**의 일별 집계·이벤트에 넣고, 기기의 '마지막 접속'은 되돌리지 않는다. 횟수 제한은 도착 시각 기준이라 오프라인이 길면 일부는 제한에 걸려 버려질 수 있다.
+- 시험: `tests/logging.test.mjs`(14개), `scripts/security/offline-log-test.cjs <주소>`(끊김→쌓임→복구 시 전송·삭제). `usage-log-e2e.cjs` 는 `fetch` 도 가로채 확인한다.
+
 ## 서비스를 추가할 때
 1. 새 서비스 `index.html` 의 `<head>` 에 `<script src="../aiedu-log.js"></script>`.
 2. `api/_lib/log-core.js` 의 `SERVICES` 에 id 추가(또는 환경변수 `EXTRA_SERVICES`) — 목록에 없는 서비스는 서버가 버린다. 관리자 화면 이름은 `public/admin/admin.js` 의 `SVC` 에 추가.

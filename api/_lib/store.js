@@ -47,7 +47,7 @@ export function createMemoryStore(now = () => Date.now()) {
       case 'LPUSH': { const e = get(key, 'l', () => []); for (const m of a) e.v.unshift(String(m)); return e.v.length; }
       case 'LTRIM': { const e = alive(key); if (e) e.v = e.v.slice(Number(a[0]), Number(a[1]) + 1); return 'OK'; }
       case 'LRANGE': { const e = alive(key); if (!e) return []; const end = Number(a[1]); return e.v.slice(Number(a[0]), end === -1 ? undefined : end + 1); }
-      case 'ZADD': { const e = get(key, 'z', () => new Map()); e.v.set(String(a[1]), Number(a[0])); return 1; }
+      case 'ZADD': { const e = get(key, 'z', () => new Map()); const nx = a[0] === 'NX'; const [sc, mem] = nx ? [a[1], a[2]] : [a[0], a[1]]; if (nx && e.v.has(String(mem))) return 0; e.v.set(String(mem), Number(sc)); return 1; }
       case 'ZREM': { const e = alive(key); return e && e.v.delete(String(a[0])) ? 1 : 0; }
       case 'ZREVRANGE': { const e = alive(key); if (!e) return []; const arr = [...e.v.entries()].sort((x, y) => y[1] - x[1]).slice(Number(a[0]), Number(a[1]) + 1); return String(a[2] || '').toUpperCase() === 'WITHSCORES' ? arr.flatMap(([m, s]) => [m, String(s)]) : arr.map(([m]) => m); }
       case 'ZREMRANGEBYSCORE': { const e = alive(key); if (!e) return 0; let n = 0; for (const [m, s] of e.v) if (s >= Number(a[0]) && s <= Number(a[1])) { e.v.delete(m); n++; } return n; }

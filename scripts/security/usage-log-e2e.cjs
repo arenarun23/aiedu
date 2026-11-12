@@ -13,7 +13,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const bodies = [];   // 서버로 나간 모든 기록 본문
   const spy = async (page) => {
     await page.exposeFunction('__rec', (t) => { bodies.push(t); });
-    await page.addInitScript(() => { const o = navigator.sendBeacon.bind(navigator); navigator.sendBeacon = function (u, d) { try { if (d instanceof Blob) d.text().then((t) => window.__rec(t)); } catch (e) { /* 무시 */ } return o(u, d); }; });
+    await page.addInitScript(() => { const o = navigator.sendBeacon.bind(navigator); navigator.sendBeacon = function (u, d) { try { if (d instanceof Blob) d.text().then((t) => window.__rec(t)); } catch (e) { /* 무시 */ } return o(u, d); }; const f = window.fetch.bind(window); window.fetch = function (u, i) { try { if (/api\/log/.test(String(u)) && i && typeof i.body === 'string') window.__rec(i.body); } catch (e) { /* 무시 */ } return f(u, i); }; });
   };
 
   // ---------- 기기 A: 삼성 태블릿(울산, 시·도 코드 31) ----------
@@ -41,7 +41,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log('— 1) 서버로 나간 기록의 내용 점검 (' + bodies.length + '건)');
   ok(bodies.every((x) => x.length > 0), '모든 기록 본문을 읽을 수 있음(' + bodies.filter((x) => !x.length).length + '건 비어 있음)');
   const parsed = bodies.filter((x) => x.length).map((s) => JSON.parse(s));
-  const allowedKeys = new Set(['d', 's', 'e', 'w', 'h', 't', 'a', 'g']);
+  const allowedKeys = new Set(['d', 's', 'e', 'w', 'h', 't', 'a', 'g', 'ts']);
   ok(parsed.length >= 10, '기록 ' + parsed.length + '건 발생');
   ok(parsed.every((p) => Object.keys(p).every((k) => allowedKeys.has(k))), '허용된 필드만 전송(' + [...new Set(parsed.flatMap((p) => Object.keys(p)))].join(',') + ')');
   ok(!bodies.join('').includes('홍길동') && !bodies.join('').includes('학교'), '아이가 입력한 내용(홍길동·학교)은 전송되지 않음');

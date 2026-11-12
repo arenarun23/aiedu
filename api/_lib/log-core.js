@@ -54,11 +54,18 @@ export async function handleLog(ctx) {
   const taps = clampInt(b.a ?? 0, 0, 3000) ?? 0;
   const w = clampInt(b.w, 100, 10000), h = clampInt(b.h, 100, 10000);
   if (evt === 'tick' && !secs) return silent();
+  // 오프라인에서 쌓인 기록은 원래 시각(ts)으로 반영한다. 7일보다 오래됐거나 형식이 틀리면 버리고, 미래 시각은 지금으로 본다.
+  let at = now;
+  if (b.ts !== undefined) {
+    if (!Number.isInteger(b.ts) || b.ts < now - 7 * 86400000) return silent();
+    at = Math.min(b.ts, now);
+  }
+  const late = at < now - 120000;                                          // 늦게 도착한 기록: 마지막 접속 시각은 갱신하지 않는다
 
-  const store = ctx.store, day = kstDay(now), hour = Math.floor(now / 3600000);
-  const ip = ipHash(ctx, day);
+  const store = ctx.store, day = kstDay(at), hour = Math.floor(now / 3600000);
+  const ip = ipHash(ctx, kstDay(now));
   const cap = clampInt(env.LOG_DAILY_CAP || 50000, 100, 1000000) ?? 50000;
-  const [c1, c2, c3] = await Promise.all([counter(store, `${P}cap:${day}`, 172800, now), counter(store, `${P}rl:dev:${id}:${hour}`, 3700, now), counter(store, `${P}rl:ip:${ip}:${hour}`, 3700, now)]);
+  const [c1, c2, c3] = await Promise.all([counter(store, `${P}cap:${kstDay(now)}`, 172800, now), counter(store, `${P}rl:dev:${id}:${hour}`, 3700, now), counter(store, `${P}rl:ip:${ip}:${hour}`, 3700, now)]);
   if (c1 > cap || c2 > 300 || c3 > 5000) return silent();
 
   const ttl = retentionDays(env) * 86400;
@@ -68,10 +75,10 @@ export async function handleLog(ctx) {
   const screen = w && h ? `${Math.round(w / 10) * 10}x${Math.round(h / 10) * 10}` : '-';
   const dev = `${P}dev:${id}`, ev = `${P}ev:${id}`, dk = `${P}day:${day}`;
   const cmds = [
-    ['HSETNX', dev, 'first', now],
-    ['HSET', dev, 'last', now, 'device', ua.device, 'os', ua.os, 'browser', ua.browser, 'screen', screen, 'country', country, 'region', region],
+    ['HSETNX', dev, 'first', at],
+    ['HSET', dev, ...(late ? [] : ['last', now]), 'device', ua.device, 'os', ua.os, 'browser', ua.browser, 'screen', screen, 'country', country, 'region', region],
     ['EXPIRE', dev, ttl],
-    ['ZADD', `${P}devs`, now, id],
+    ...(late ? [['ZADD', `${P}devs`, 'NX', at, id]] : [['ZADD', `${P}devs`, now, id]]),
     ['ZREMRANGEBYSCORE', `${P}devs`, 0, now - ttl * 1000],
     ['EXPIRE', `${P}devs`, ttl],
     ['SADD', `${P}daydev:${day}`, id], ['EXPIRE', `${P}daydev:${day}`, ttl],
@@ -81,7 +88,7 @@ export async function handleLog(ctx) {
     cmds.push(['HINCRBY', dev, `sec:${svc}`, secs], ['HINCRBY', dev, `tap:${svc}`, taps], ['HINCRBY', dk, `sec:${svc}`, secs], ['HINCRBY', dk, `tap:${svc}`, taps]);
   } else {
     if (evt === 'open') cmds.push(['HINCRBY', dev, 'visits', 1], ['HINCRBY', dev, `open:${svc}`, 1]);
-    cmds.push(['HINCRBY', dk, `${evt}:${svc}`, 1], ['LPUSH', ev, `${now}|${svc}|${evt}|${tag}`], ['LTRIM', ev, 0, 199], ['EXPIRE', ev, ttl]);
+    cmds.push(['HINCRBY', dk, `${evt}:${svc}`, 1], ['LPUSH', ev, `${at}|${svc}|${evt}|${tag}`], ['LTRIM', ev, 0, 199], ['EXPIRE', ev, ttl]);
   }
   cmds.push(['EXPIRE', dk, ttl]);
   try { await store.exec(cmds); } catch { /* 기록 실패는 사용자에게 영향이 없어야 한다 */ }
