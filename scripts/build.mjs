@@ -7,6 +7,7 @@ import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, mkdtempSync } f
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DEFAULT_EXCLUDE, gitEnv, sanitizeTree, validateApps } from './lib.mjs';
+import { makeSw } from './sw-gen.mjs';
 
 const all = validateApps(JSON.parse(readFileSync('apps.json', 'utf8')));
 const apps = all.filter(a => a.enabled !== false);
@@ -29,5 +30,21 @@ for (const a of apps) {
   cpSync(tmp, join('dist', a.id), { recursive: true, dereference: false });
   console.log('✔', a.id, `(${s.files}개, ${(s.bytes / 1048576).toFixed(1)}MB${s.links ? `, 링크 ${s.links}개 제거` : ''})`);
 }
+// 오프라인용 서비스 워커: 서비스마다 + 허브(허브는 서비스 폴더·관리자·api 를 제외한 자기 파일만)
+const hubSkip = (r) => r.startsWith('admin/') || r.startsWith('fonts/') || apps.some(a => r.startsWith(a.id + '/'));
+const REG = '<script src="../aiedu-sw.js"></script>';
+for (const a of apps) {
+  if (a.url) continue;
+  const html = join('dist', a.id, 'index.html');
+  const r = makeSw(a.id, join('dist', a.id));
+  if (r.own) { console.log('⟳', a.id, '자체 서비스 워커 사용'); continue; }
+  let t = readFileSync(html, 'utf8');
+  if (!t.includes('aiedu-sw.js')) { t = t.replace('</head>', REG + '</head>'); writeFileSync(html, t); }
+  console.log('⟳', a.id, `오프라인 v${r.version} (${r.files}개, 글꼴 ${r.fonts}개)`);
+}
 writeFileSync('dist/apps.json', JSON.stringify(
   apps.map(a => ({ id: a.id, name: a.name, desc: a.desc, icon: a.icon, color: a.color, href: a.url || `${a.id}/`, sha: shas[a.id] })), null, 2));
+{
+  const r = makeSw('hub', 'dist', { skip: hubSkip });
+  console.log('⟳ hub', `오프라인 v${r.version} (${r.files}개, 글꼴 ${r.fonts}개)`);
+}

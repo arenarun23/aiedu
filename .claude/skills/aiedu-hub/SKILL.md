@@ -107,3 +107,6 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - `references/troubleshooting.md` — "반영이 안 돼요" 등 증상별 점검 순서
 - `aiedu-services` 스킬 — 서비스 5개 각각의 설명
 - `add-service` 스킬 — 서비스 추가/제거 절차
+
+## 오프라인
+허브·서비스는 처음 한 번 열면 인터넷 없이도 열린다(빌드가 서비스 워커 자동 생성, 열 때마다 버전 확인·예전 저장본 삭제, 학생 기록 미접촉). 상세·시험: `references/offline.md`.
