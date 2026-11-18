@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 const BASE = process.argv[2] || 'http://127.0.0.1:8870/';
 const ITER = Number(process.argv[3] || 70);
-const apps = ['', 'flagmap/', 'hangul/', 'hanja/', 'calcul/', 'word/', 'game/'];
+const apps = ['', 'flagmap/', 'hangul/', 'hanja/', 'calcul/', 'word/', 'game/', 'sudoku/'];
 let seed = 12345;
 const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 

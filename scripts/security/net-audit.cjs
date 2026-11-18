@@ -1,7 +1,7 @@
 // 각 서비스가 (1) 외부 호스트로 요청을 보내는지 (2) 자체 글꼴이 실제로 로드되는지 (3) 4xx/5xx 가 있는지 확인한다.
 const { chromium } = require('playwright');
 const BASE = process.argv[2] || 'http://127.0.0.1:8880/';
-const apps = [['허브', ''], ['flagmap', 'flagmap/'], ['hangul', 'hangul/'], ['hanja', 'hanja/'], ['calcul', 'calcul/'], ['word', 'word/'], ['game', 'game/']];
+const apps = [['허브', ''], ['flagmap', 'flagmap/'], ['hangul', 'hangul/'], ['hanja', 'hanja/'], ['calcul', 'calcul/'], ['word', 'word/'], ['game', 'game/'], ['sudoku', 'sudoku/']];
 (async () => {
   const b = await chromium.launch();
   for (const [name, path] of apps) {
@@ -15,6 +15,7 @@ const apps = [['허브', ''], ['flagmap', 'flagmap/'], ['hangul', 'hangul/'], ['
     await p.waitForTimeout(800);
     if (name === 'flagmap') { await p.click('#browse').catch(() => {}); await p.waitForTimeout(800); }
     if (name === 'word') { await p.click('#btnGo').catch(() => {}); await p.waitForTimeout(600); }
+    if (name === 'sudoku') { await p.click('#startFirst').catch(() => {}); await p.waitForTimeout(800); }   // 문제 생성 Web Worker 까지 확인
     const info = await p.evaluate(async () => {
       await document.fonts.ready;
       const faces = [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/"/g, ''));

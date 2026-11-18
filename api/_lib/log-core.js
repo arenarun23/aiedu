@@ -7,7 +7,7 @@
 //   · 서버 스위치 LOGGING_ENABLED=1 이 아니면 아무것도 기록하지 않는다.
 import { sha256, hmacHex, safeEqual, parseCookies, parseJson, clampInt, kstDay, daysAgo, parseUA, safeTok } from './util.js';
 
-export const SERVICES = ['hub', 'flagmap', 'hangul', 'hanja', 'calcul', 'word', 'game', 'miro'];   // 서비스를 추가하면 여기에도 넣는다(또는 환경변수 EXTRA_SERVICES)
+export const SERVICES = ['hub', 'flagmap', 'hangul', 'hanja', 'calcul', 'word', 'game', 'miro', 'sudoku'];   // 서비스를 추가하면 여기에도 넣는다(또는 환경변수 EXTRA_SERVICES)
 export const EVENTS = ['open', 'tick', 'start', 'finish', 'use'];
 const P = 'aiedu:';
 const out = (status, body, headers = {}) => ({ status, body, headers });

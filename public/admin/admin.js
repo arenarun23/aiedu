@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var API = '../api/admin';
-  var SVC = { hub: '허브', flagmap: '국기', hangul: '한글', hanja: '한자', calcul: '소리셈', word: '끝말잇기', game: '게임', miro: '미로' };
+  var SVC = { hub: '허브', flagmap: '국기', hangul: '한글', hanja: '한자', calcul: '소리셈', word: '끝말잇기', game: '게임', miro: '미로', sudoku: '스도쿠' };
   var REGION = { '11': '서울', '26': '부산', '27': '대구', '28': '인천', '29': '광주', '30': '대전', '31': '울산', '50': '세종', '41': '경기', '42': '강원', '51': '강원', '43': '충북', '44': '충남', '45': '전북', '52': '전북', '46': '전남', '47': '경북', '48': '경남', '49': '제주' };
   var $ = function (id) { return document.getElementById(id); };
   function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
