@@ -70,7 +70,8 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 허브 카드와 7개 앱의 버튼은 **아래쪽 두꺼운 그림자(테두리)** 가 있고, 누르면 그만큼 **내려앉는다**. 새 버튼·새 서비스도 같은 방식으로 만든다.
 - 방식: 각 앱 CSS 끝의 `/* 누르는 느낌(입체 버튼) … */` 블록. 버튼마다 `--d`(두께, 보통 3~5px)·`--e`(테두리 색 = 버튼 색을 어둡게, 보통 `color-mix(in srgb,<색> 62~72%,#000)`) 를 주고 `box-shadow:0 var(--d) 0 var(--e)`, `:active:not(:disabled)` 에서 `translateY(calc(var(--d) - 1px))` + `box-shadow:0 1px 0 var(--e)` + `transition-duration:0s`(누를 땐 즉시, 뗄 때 0.14초에 돌아옴). 선택된 상태(`.on`, `aria-pressed=true`)는 `--e` 만 그 색으로 바꾼다.
 - 그림자·이동만 쓰므로 **레이아웃(한 화면 맞춤)에 영향 없음**. 공용 규칙은 특이도를 낮게(sudoku 는 `button:where(:not(.cell,.brand))`) 두어 개별 규칙이 이기게 한다.
-- 제외: 필기판·캔버스, 스도쿠 칸(`.cell`), 레이싱 조종 버튼(`.rbtn`, 누르고 있는 조작), 글자 링크.
+- 제외: 필기판·캔버스, 스도쿠 칸(`.cell`), 글자 링크. 게임 모음은 게임 안 버튼까지 적용(색칠 물감 `.sw`, 분류 물건 `.it`, 두더지 구멍 `.hole`, 레이싱 `.rwc`·`.rbtn`·`.rcard`). `pointerdown` 에서 `preventDefault()` 하는 버튼은 `:active` 가 켜지지 않으므로 클래스로 눌림을 표시한다(두더지 `.hole.press`, 레이싱 조종 `.rbtn.on`).
+- 점검: 게임마다 보이는 누를 수 있는 요소 중 아래 그림자가 없는 것을 찾는 방식으로 빠진 버튼을 확인했다(2026-11-18, 9개 게임·레이싱 경기 화면·보상 화면·큐브 원리/공식 화면).
 - 아이폰·아이패드 사파리는 터치 리스너가 있어야 `:active` 가 보인다 → 복귀 아이콘 스크립트(`templates/aiedu-home.html`)에 `document.addEventListener('touchstart',function(){},{passive:true})` 한 줄, 허브는 `public/index.html` 에 같은 줄.
 - 복귀 아이콘도 같은 느낌: `box-shadow:0 4px 0 #e2916b,…`, 누르면 `translateY(3px)`. 바꾸면 템플릿과 7개 앱을 함께 고친다.
 - 확인: 버튼을 마우스로 누른 채(`mouse.down`, 떼기 전에 밖으로 옮겨 클릭 방지) 위치가 `--d - 1px` 만큼 내려가는지 측정.
