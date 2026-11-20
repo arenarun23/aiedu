@@ -5,14 +5,14 @@ description: AIEDU 허브 사이트(유아·초등 저학년 놀이 서비스 �
 
 # AIEDU 허브 — 이어받기 가이드
 
-유아·초등 저학년용 정적 웹앱 7개를 한 곳에서 보여 주는 허브. 서비스는 자주 추가/삭제된다.
+유아·초등 저학년용 정적 웹앱 8개를 한 곳에서 보여 주는 허브. 서비스는 자주 추가/삭제된다.
 
 ## 한눈에
 | 항목 | 값 |
 |---|---|
 | 허브 저장소 | `arenarun23/aiedu` (main 에 push → Vercel 자동 배포) |
 | 허브 주소 | https://aiedu-pearl.vercel.app |
-| 서비스 7개 | flagmap(국기) · hangul(한글 쓰기) · hanja(한자 찾기) · calcul(소리셈) · word(끝말잇기) · game(게임 모음) · sudoku(스도쿠) — 각각 `arenarun23/<이름>` 저장소. 자세히는 `aiedu-services` 스킬 |
+| 서비스 8개 | flagmap(국기) · hangul(한글 쓰기) · hanja(한자 찾기) · calcul(소리셈) · word(끝말잇기) · game(게임 모음) · sudoku(스도쿠) · baduk(바둑, 빌드 결과를 `hub` 브랜치에서 가져옴) — 각각 `arenarun23/<이름>` 저장소. 자세히는 `aiedu-services` 스킬 |
 | 호스팅 | Vercel (Hobby), 프로젝트 `aiedu`. 허브 저장소를 연결해 push 마다 배포 |
 | 서비스 추가/제거 | `add-service` 스킬 (또는 `apps.json` 직접 수정) |
 
@@ -42,8 +42,8 @@ public/  (허브 화면: index.html, 아이콘, manifest) ──> dist/ 로 복�
 - **한 화면에 맞추기가 핵심 요구**(태블릿 가로에서 잘림이 실제 문제였다). 기준 단위 `--u = min(1vw, 1.6vh × --k)`; 로고·카드·글자·여백이 `--u` 비례.
 - JS 가 카드 수·방향으로 `--cols`, `--k` 를 계산(가로 최대 4열/세로·좁은 폭 2열, 행이 늘면 크기 배율 `--k` 감소). 5개 → 가로 3+2, 6개 → 3+3, 4개 → 한 줄.
 - 낮은 화면(≤460px)은 카드 설명 숨김, 작은 폰 세로(≤700px)는 안내 문구 숨김. `prefers-reduced-motion` 은 애니메이션 끔.
-- 색: pink · sky · orange · mint · lemon · lilac · peach (7색 모두 사용 중: sudoku 가 lemon(2026-11-18). 8번째 서비스부터는 색이 겹친다 — 이웃 카드와 다른 색을 고를 것). 카드 순서 = `apps.json` 순서.
-- 검증: `node scripts/fit-check.mjs <URL>` (8가지 화면 크기에서 세로 넘침 측정). 현재 기준: 카드 4~6개에서 전부 0px, 360×640 만 4px(허용). 서비스 7개 이상은 작은 폰에서 스크롤이 생김(정상). 7개 측정(2026-11-18): 태블릿·PC·폰 가로 0px, 390×780 43px, 360×640 171px.
+- 색: pink · sky · orange · mint · lemon · lilac · peach (7색 모두 사용 중: sudoku 가 lemon(2026-11-18). 8번째 서비스부터는 색이 겹친다 — 이웃 카드와 다른 색을 고를 것. baduk(8번째)은 sky: 가로 4+4 배치에서 hangul(sky)과 이웃하지 않음). 카드 순서 = `apps.json` 순서.
+- 검증: `node scripts/fit-check.mjs <URL>` (8가지 화면 크기에서 세로 넘침 측정). 현재 기준: 카드 4~6개에서 전부 0px, 360×640 만 4px(허용). 서비스 7개 이상은 작은 폰에서 스크롤이 생김(정상). 7개 측정(2026-11-18): 태블릿·PC·폰 가로 0px, 390×780 43px, 360×640 171px. 8개 측정(2026-11-20, 가로 4+4): 태블릿·PC·폰 가로·태블릿 세로 0px, 390×780 60px, 360×640 188px.
 - 상세·튜닝 이력: `references/layout-and-testing.md`
 
 ## 허브 파비콘·홈 화면 아이콘
@@ -63,7 +63,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - **모양**: 웃는 별 캐릭터(분홍 별, 노랑·복숭아 원형 버튼, 44px). 집 모양이 아닌 이유: `word`·`game` 에 앱 안 🏠(처음 화면) 버튼이 이미 있어 헷갈리기 때문.
 - **위치(통일)**: **페이지 왼쪽 위**, `left/top 8px`, `position:absolute`, `<body>` 바로 다음 첫 요소(컨테이너 안에 넣으면 좌표가 달라진다). 링크는 상대경로 `../`(허브 하위 경로에서 허브 첫 화면으로).
 - **자리 비우기**: 아이콘이 다른 요소를 가리지 않게 앱마다 왼쪽 위 52×52px 를 비운다. 현재 방식: 제목 줄이 있는 앱은 `.top{padding-left:52px}`(calcul·word), game 은 `#bar{padding-left:calc(.7rem + 46px)}`, hangul/hanja 는 `.left h2{padding-left:52px}` + 좁은/낮은 화면에서 `.left{padding-top:52px}`, flagmap 은 상태 말풍선이 가운데라 별도 처리 없음. 필기판·캔버스 위에는 두지 않는다(아이가 글씨를 쓰다 실수로 누르는 것 방지).
-- **원본 코드**: `templates/aiedu-home.html` (CSS + `<a>`). 아이콘 모양을 바꾸려면 이 파일과 7개 앱을 함께 고친다.
+- **원본 코드**: `templates/aiedu-home.html` (CSS + `<a>`). 아이콘 모양을 바꾸려면 이 파일과 8개 앱을 함께 고친다(baduk 은 `index.html` 에 들어 있고, 제목 줄 `.topbar{padding-left:40px}` 로 자리를 비움).
 - **검증**: 8가지 화면 크기에서 (1) 아이콘 좌표가 모두 `8,8` 인지 (2) 다른 버튼·입력·제목과 겹치지 않는지 (3) 넘침이 수정 전과 같은지. 확인된 기준(2026-11-04): 6개 앱 모두 `8,8`, 겹침 없음(한글·한자의 `h2` 박스 겹침은 글자가 52px 비켜 있어 실제 겹침 아님), 넘침 변화 없음(`calcul` 시작 화면의 기존 스크롤은 별개).
 
 ## 버튼 누르는 느낌(입체 버튼) — 모든 서비스 공통 (2026-11-18)
@@ -107,6 +107,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - 삼성 인터넷에서 새 창이 안 뜨고 같은 창으로 이동한다는 제보: `target=_blank` 는 정상 코드. 캐시 또는 바로가기(PWA) 모드 의심. 시크릿 모드로 확인 요청한 상태(결과 미수신). 필요하면 클릭 시 `window.open` 폴백 추가.
 - `hangul` 은 자체 Vercel 프로젝트(`hangul-xi-jet.vercel.app`)가 따로 있다. 허브는 쓰지 않으므로 사용자가 지워도 된다(미정).
 - 앱 6개 모두 즉시 알림(notify-hub + Secret)으로 연결해 두었다. 새 앱도 같은 방식으로 연결할 것.
+- `baduk`(2026-11-20 추가)은 앱 저장소의 `hub-build.yml` 이 빌드 후 허브 Deploy Hook 을 부르지만 **저장소 Secret `HUB_DEPLOY_HOOK` 등록은 사용자 몫**. 등록 전에는 5분 주기 안전망으로 갱신된다.
 - `sudoku`(2026-11-18 추가)는 `notify-hub.yml` 은 넣었으나 **저장소 Secret `HUB_DEPLOY_HOOK` 등록은 사용자 몫**(Actions 로그 `HOOK: ***` 로 확인). 등록 전에는 5분 주기 안전망으로만 갱신된다.
 - 보안 시험 서버(`header-server.py`)에서 허브 첫 화면이 `networkidle` 에 도달하지 못해 `net-audit.cjs`·`fit-check.mjs` 가 시간 초과된다(2026-11-18 확인, 기존 문제). 그때는 `waitUntil:'load'` 사본으로 돌리거나 `python3 -m http.server -d dist` 로 측정한다.
 
@@ -117,7 +118,7 @@ node scripts/check-updates.mjs                                # 배포본 vs 최
 - `references/history.md` — 결정 이력(왜 이렇게 했나)
 - `scripts/safe-push.sh` — 저장소 커밋·push 안전 절차(충돌·원격 앞섬 감지)
 - `references/troubleshooting.md` — "반영이 안 돼요" 등 증상별 점검 순서
-- `aiedu-services` 스킬 — 서비스 7개 각각의 설명
+- `aiedu-services` 스킬 — 서비스 8개 각각의 설명
 - `add-service` 스킬 — 서비스 추가/제거 절차
 
 ## 오프라인

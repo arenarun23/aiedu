@@ -14,7 +14,7 @@ description: AIEDU 허브에 새 서비스(앱)를 추가하거나 제거·숨�
    - 저장소 `owner/repo` (또는 따로 배포된 `url`) — 둘 중 하나
    - 이름, 설명(한 줄, 유아·초등 저학년 눈높이), 이모지 아이콘, 색
    - 색: pink · sky · orange · mint · lemon · lilac · peach (이미 쓴 색과 겹치지 않게 제안)
-   - 앱이 정적 파일인지(빌드 불필요), 상대경로를 쓰는지 확인. 빌드가 필요한 앱이면 `repo` 방식은 불가 → 따로 배포 후 `url` 사용.
+   - 앱이 정적 파일인지(빌드 불필요), 상대경로를 쓰는지 확인. 빌드가 필요한 앱(Vite 등)은 그 저장소의 GitHub Actions 가 빌드 결과를 별도 브랜치(예: `hub`)에 올리게 하고 `"ref": "hub"` 로 등록한다(예: baduk 의 `.github/workflows/hub-build.yml`, 빌드 설정 `base: './'`). 따로 배포된 외부 주소(`url`)는 허브의 오프라인·이용 기록·복귀 아이콘 규칙을 적용할 수 없어 마지막 수단.
 2. `apps.json` 에 한 줄 추가한다. `id` 는 영문 소문자(폴더명이 된다). 불필요하게 큰 폴더는 `exclude` 로 뺀다.
    ```json
    { "id": "새앱", "name": "이름", "desc": "설명", "icon": "🎨", "color": "lilac", "repo": "arenarun23/새앱", "enabled": true }

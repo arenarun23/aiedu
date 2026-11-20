@@ -1,9 +1,9 @@
 ---
 name: aiedu-services
-description: AIEDU 허브에 들어 있는 서비스 7개(세계 국기 친구들 flagmap, 한글 쓰기 hangul, 한자 찾기 hanja, 소리셈 놀이터 calcul, 끝말잇기 놀이터 word, 놀이터 게임 모음 game, 스도쿠 놀이터 sudoku) 각각의 기능·파일 구조·외부 의존·수정 시 주의점. 특정 서비스를 고치거나 새 서비스를 같은 방식으로 만들 때, 또는 "국기 앱", "한글 앱", "한자 앱", "계산 앱", "끝말잇기", "스도쿠" 같은 말이 나오면 사용. 허브 전체 구조는 aiedu-hub 스킬.
+description: AIEDU 허브에 들어 있는 서비스 8개(세계 국기 친구들 flagmap, 한글 쓰기 hangul, 한자 찾기 hanja, 소리셈 놀이터 calcul, 끝말잇기 놀이터 word, 놀이터 게임 모음 game, 스도쿠 놀이터 sudoku, 꼬마 바둑 교실 baduk) 각각의 기능·파일 구조·외부 의존·수정 시 주의점. 특정 서비스를 고치거나 새 서비스를 같은 방식으로 만들 때, 또는 "국기 앱", "한글 앱", "한자 앱", "계산 앱", "끝말잇기", "스도쿠" 같은 말이 나오면 사용. 허브 전체 구조는 aiedu-hub 스킬.
 ---
 
-# AIEDU 서비스 7개
+# AIEDU 서비스 8개
 
 공통 성격: 유아·초등 저학년용 **정적 웹앱**(서버·API 키 없음, `index.html` 중심), 한국어, 둥근 글꼴 Jua/Gowun Dodum, 큰 터치 버튼, 폰·태블릿 우선. 모두 `main` 에 push 하면 허브가 20~60초 안에 갱신(앱 저장소 Secret `HUB_DEPLOY_HOOK` + `.github/workflows/notify-hub.yml`).
 
@@ -16,6 +16,7 @@ description: AIEDU 허브에 들어 있는 서비스 7개(세계 국기 친구�
 | word | 끝말잇기 놀이터 🔤 | arenarun23/word | 말랑이와 끝말잇기, 말·손글씨·힌트·"모르겠어" 추천 | 0.9MB | references/word.md |
 | game | 놀이터 게임 모음 🎮 | arenarun23/game | 한 페이지 안에서 고르는 미니게임 6종(색칠하기·점 잇기·짝 맞추기·다른 것 찾기·두더지 잡기·분류하기) | 92KB | references/game.md |
 | sudoku | 스도쿠 놀이터 🔢 | arenarun23/sudoku | 2×2~12×12 단계별 스도쿠(난수 생성·유일해), 3단계 힌트, 학생별 저장·이어하기 | 60KB | references/sudoku.md |
+| baduk | 꼬마 바둑 교실 ⚫ | arenarun23/baduk | 바둑 규칙 레슨 9개·확인 문제 12개·AI(거북이·토끼·호랑이)와 따먹기 바둑, 효과음·읽어 주기 | 0.3MB | references/baduk.md |
 
 허브 카드 문구·아이콘·색은 허브 `apps.json` 에 있다(앱 안 문구와 별개).
 
@@ -38,6 +39,7 @@ calcul   repo arenarun23/calcul   color mint
 word     repo arenarun23/word     color lilac   exclude [source/ko-nouns.txt, build-extra.mjs]   # source/LICENSE-* 는 배포에 남김
 game     repo arenarun23/game     color peach
 sudoku   repo arenarun23/sudoku   color lemon
+baduk    repo arenarun23/baduk    color sky     ref hub   # Vite 빌드 앱: Actions 가 빌드 결과를 hub 브랜치에 올림
 ```
 `exclude` 는 원본 데이터·빌드 스크립트를 배포에서 빼 용량을 줄이기 위한 것(런타임에 쓰는 `dict/`, `extra.txt` 는 반드시 포함).
 
