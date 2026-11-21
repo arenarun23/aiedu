@@ -16,7 +16,7 @@ description: AIEDU 허브에 들어 있는 서비스 8개(세계 국기 친구�
 | word | 끝말잇기 놀이터 🔤 | arenarun23/word | 말랑이와 끝말잇기, 말·손글씨·힌트·"모르겠어" 추천 | 0.9MB | references/word.md |
 | game | 놀이터 게임 모음 🎮 | arenarun23/game | 한 페이지 안에서 고르는 미니게임 6종(색칠하기·점 잇기·짝 맞추기·다른 것 찾기·두더지 잡기·분류하기) | 92KB | references/game.md |
 | sudoku | 스도쿠 놀이터 🔢 | arenarun23/sudoku | 2×2~16×16 단계별 스도쿠(난수 생성·유일해), 3단계 힌트, 학생별 저장·이어하기 | 60KB | references/sudoku.md |
-| baduk | 꼬마 바둑 교실 ⚫ | arenarun23/baduk | 바둑 규칙 레슨 9개·확인 문제 12개·AI(거북이·토끼·호랑이)와 따먹기 바둑, 효과음·읽어 주기 | 0.3MB | references/baduk.md |
+| baduk | 꼬마 바둑 교실 ⚫ | arenarun23/baduk | 바둑 규칙 레슨 9개·확인 문제 12개·AI(거북이·토끼·호랑이)와 따먹기 바둑(5~15줄), 12×12 오목 놀이, 효과음·읽어 주기 | 0.3MB | references/baduk.md |
 
 허브 카드 문구·아이콘·색은 허브 `apps.json` 에 있다(앱 안 문구와 별개).
 
