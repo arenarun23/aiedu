@@ -24,6 +24,7 @@
 | `src/lib/sound.ts` · `speech.ts` · `log.ts` | 효과음 · 읽어 주기 · 이용 기록 |
 
 ## 주의
+- **다크 모드**(2026-11-21): 삼성 인터넷·크롬의 '웹 페이지 어둡게' 강제 다크가 흰 돌까지 검게 칠하던 문제 → 앱이 `<meta name="color-scheme" content="light dark">` + `prefers-color-scheme: dark` 색으로 직접 다크 모드를 지원해 강제 다크를 피함. 바둑판·돌·돌 아이콘 색은 모드와 무관하게 고정. 시험: Playwright `--blink-settings=forceDarkModeEnabled=true` + `colorScheme:'dark'` 에서 흰 돌 밝기(수정 전 28 → 후 245). 다른 앱도 강제 다크에서 흰 그림이 뒤집힐 수 있으니 같은 방법으로 점검.
 - 이용 기록 태그: `lesson-<id>`, `quiz`, `quiz-star0~3`, `turtle|rabbit|tiger`, `kidwin|botwin|draw` 만. 아이의 답은 보내지 않는다.
 - 한 화면 맞춤: 가로 화면은 바둑판 왼쪽·설명 오른쪽 2열, 바둑판 크기는 화면 높이에 맞춤(`--reserve`, 세로가 긴 판은 `--ar`=가로/세로 비율만큼 폭을 줄임). 작은 폰 세로(높이 ≤700px)에서는 대국 설정의 AI 설명 한 줄을 숨김. 2026-11-20 측정: 8가지 크기 × 화면 7개(홈·목록·레슨·문제·대국 설정·9줄 대국 등)에서 360×640 대국 설정 2px 외 모두 0px.
 - 시험: `npm test`(규칙·AI·모든 레슨/문제의 정답 존재 검사 57개). 문제를 추가하면 시험이 풀 수 있는지 확인한다.
